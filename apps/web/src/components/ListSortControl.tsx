@@ -6,44 +6,19 @@ const OPTIONS: { by: SortBy; label: string }[] = [
   { by: "visited", label: "По дате посещения" },
 ];
 
-/** Heroicons 24/outline: BarsArrowUpIcon — от меньшего к большему. */
-function SortAscIcon({ className }: { className?: string }) {
+/** Одна стрелка: asc — вверх, desc — вниз (поворот на 180°). */
+function SortDirChevron({ className, dir }: { className?: string; dir: SortDir }) {
   return (
     <svg
       className={className}
-      xmlns="http://www.w3.org/2000/svg"
-      fill="none"
       viewBox="0 0 24 24"
-      strokeWidth={1.5}
-      stroke="currentColor"
-      aria-hidden
-    >
-      <path
-        strokeLinecap="round"
-        strokeLinejoin="round"
-        d="M3 4.5h14.25M3 9h9.75M3 13.5h5.25m5.25-.75L17.25 9m0 0L21 12.75M17.25 9v12"
-      />
-    </svg>
-  );
-}
-
-/** Heroicons 24/outline: BarsArrowDownIcon — от большего к меньшему. */
-function SortDescIcon({ className }: { className?: string }) {
-  return (
-    <svg
-      className={className}
-      xmlns="http://www.w3.org/2000/svg"
       fill="none"
-      viewBox="0 0 24 24"
-      strokeWidth={1.5}
       stroke="currentColor"
+      strokeWidth={1.75}
       aria-hidden
+      style={{ transform: dir === "desc" ? "rotate(180deg)" : undefined }}
     >
-      <path
-        strokeLinecap="round"
-        strokeLinejoin="round"
-        d="M3 4.5h14.25M3 9h9.75M3 13.5h9.75m4.5-4.5v12m0 0-3.75-3.75M17.25 21 21 17.25"
-      />
+      <path strokeLinecap="round" strokeLinejoin="round" d="M12 5v14m0 0 4.5-4.5M12 19l-4.5-4.5" />
     </svg>
   );
 }
@@ -52,24 +27,26 @@ export function ListSortControl({
   by,
   dir,
   onChange,
+  className = "",
 }: {
   by: SortBy;
   dir: SortDir;
   onChange: (by: SortBy, dir: SortDir) => void;
+  className?: string;
 }) {
   const current = OPTIONS.find((o) => o.by === by) ?? OPTIONS[0];
 
   return (
-    <div className="flex flex-wrap items-stretch gap-2" role="group" aria-label="Сортировка списка">
-      <div className="group/sort relative w-full min-w-0 max-w-[min(100%,20rem)] sm:min-w-[13.5rem]">
+    <div className={["flex min-w-0 items-stretch gap-2", className].filter(Boolean).join(" ")} role="group" aria-label="Сортировка списка">
+      <div className="group/sort relative min-w-0 flex-1 lg:min-w-[13.5rem] lg:max-w-[13.5rem] lg:flex-none">
         <div
           className={[
-            "flex min-h-[2.75rem] cursor-default select-none items-center rounded-xl border border-brand-line bg-brand-surface px-3 py-2 text-sm font-medium text-brand-ink transition-colors sm:h-10 sm:min-h-0 sm:py-0",
+            "box-border flex h-10 min-h-[2.75rem] w-full cursor-default select-none items-center rounded-xl border border-brand-line bg-brand-surface px-3 text-sm font-medium text-brand-ink transition-colors sm:min-h-0",
             "dark:border-brand-panel-border dark:bg-brand-ink/50 dark:text-brand-surface",
             "group-hover/sort:rounded-b-none group-hover/sort:border-b-transparent dark:group-hover/sort:border-b-transparent",
           ].join(" ")}
         >
-          <span className="block truncate">{current.label}</span>
+          <span className="block min-w-0 truncate">{current.label}</span>
         </div>
         <ul
           className={[
@@ -102,41 +79,18 @@ export function ListSortControl({
         </ul>
       </div>
 
-      <div
-        className="flex h-11 w-full shrink-0 overflow-hidden rounded-xl border border-brand-line bg-brand-card sm:h-10 sm:w-auto dark:border-brand-panel-border dark:bg-brand-panel"
-        role="group"
-        aria-label="Направление сортировки"
+      <button
+        type="button"
+        title={dir === "asc" ? "Сортировка: по возрастанию (нажмите — по убыванию)" : "Сортировка: по убыванию (нажмите — по возрастанию)"}
+        aria-label={dir === "asc" ? "Переключить на убывание" : "Переключить на возрастание"}
+        onClick={() => onChange(by, dir === "asc" ? "desc" : "asc")}
+        className={[
+          "grid h-10 w-10 shrink-0 place-items-center rounded-xl border border-brand-line bg-brand-card text-brand-muted transition-colors hover:bg-brand-surface hover:text-brand-ink",
+          "dark:border-brand-panel-border dark:bg-brand-panel dark:hover:bg-brand-ink/60 dark:hover:text-brand-surface",
+        ].join(" ")}
       >
-        <button
-          type="button"
-          title="От меньшего к большему"
-          aria-pressed={dir === "asc"}
-          onClick={() => onChange(by, "asc")}
-          className={[
-            "grid min-h-[2.75rem] flex-1 place-items-center transition-colors sm:h-10 sm:min-h-0 sm:w-10 sm:flex-none",
-            dir === "asc"
-              ? "bg-brand-red/12 text-brand-red dark:bg-brand-red/20 dark:text-brand-surface"
-              : "text-brand-muted hover:bg-brand-surface hover:text-brand-ink dark:hover:bg-brand-ink/60 dark:hover:text-brand-surface",
-          ].join(" ")}
-        >
-          <SortAscIcon className="h-5 w-5" />
-        </button>
-        <span className="w-px shrink-0 self-stretch bg-brand-line dark:bg-brand-panel-border" aria-hidden />
-        <button
-          type="button"
-          title="От большего к меньшему"
-          aria-pressed={dir === "desc"}
-          onClick={() => onChange(by, "desc")}
-          className={[
-            "grid min-h-[2.75rem] flex-1 place-items-center transition-colors sm:h-10 sm:min-h-0 sm:w-10 sm:flex-none",
-            dir === "desc"
-              ? "bg-brand-red/12 text-brand-red dark:bg-brand-red/20 dark:text-brand-surface"
-              : "text-brand-muted hover:bg-brand-surface hover:text-brand-ink dark:hover:bg-brand-ink/60 dark:hover:text-brand-surface",
-          ].join(" ")}
-        >
-          <SortDescIcon className="h-5 w-5" />
-        </button>
-      </div>
+        <SortDirChevron dir={dir} className="h-5 w-5 transition-transform duration-200 motion-reduce:transition-none" />
+      </button>
     </div>
   );
 }

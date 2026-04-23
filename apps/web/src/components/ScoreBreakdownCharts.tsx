@@ -28,19 +28,19 @@ function ThresholdRuler(props: {
       <p className="text-sm font-semibold text-brand-ink dark:text-brand-surface">Шкала риска (0–100)</p>
       <div className="relative mt-3">
         <div
-          className="flex h-2.5 w-full overflow-hidden rounded-full bg-brand-line dark:bg-brand-panel-border"
+          className="relative flex h-2.5 w-full overflow-hidden rounded-full bg-brand-line dark:bg-brand-panel-border"
           role="img"
           aria-label={`Зоны: низкий до ${lowMax}, средний до ${mediumMax}, выше — высокий. Итог ${effective}.`}
         >
           <div style={{ width: `${lowPct}%` }} className="h-full shrink-0 bg-brand-zone-low" />
           <div style={{ width: `${midPct}%` }} className="h-full shrink-0 bg-brand-zone-mid" />
           <div style={{ width: `${highPct}%` }} className="h-full shrink-0 bg-brand-zone-high" />
+          <div
+            className="pointer-events-none absolute top-1/2 z-10 h-3 w-0.5 rounded-full bg-brand-red shadow-sm ring-1 ring-brand-red/30"
+            style={{ left: `${markerPct}%`, transform: "translate(-50%, -50%)" }}
+            aria-hidden
+          />
         </div>
-        <div
-          className="pointer-events-none absolute top-1/2 z-10 h-6 w-0.5 -translate-x-1/2 -translate-y-1/2 rounded-full bg-brand-red shadow-sm"
-          style={{ left: `${markerPct}%` }}
-          aria-hidden
-        />
       </div>
       <p className="mt-2 text-sm leading-snug text-brand-muted dark:text-brand-surface/70">
         низкий ≤{lowMax} · средний ≤{mediumMax} · выше — высокий
@@ -59,18 +59,18 @@ function RulesVsBlendBars(props: { ruleScore: number; blendedExact: number }) {
     <div className="space-y-4" title={detailTitle}>
       <div>
         <div className="mb-1.5 text-sm font-medium text-brand-muted dark:text-brand-surface/75">По правилам</div>
-        <div className="h-3 overflow-hidden rounded-full bg-brand-line dark:bg-brand-panel-border">
+        <div className="h-3 overflow-hidden rounded-full bg-brand-line ring-1 ring-inset ring-brand-line/40 dark:bg-brand-panel-border dark:ring-brand-panel-border/50">
           <div
-            className="h-full rounded-full bg-brand-muted transition-[width] duration-500 ease-out dark:bg-brand-zone-mid"
+            className="h-full min-h-[100%] rounded-full bg-brand-muted transition-[width] duration-500 ease-out dark:bg-brand-zone-mid"
             style={{ width: `${rulePct}%` }}
           />
         </div>
       </div>
       <div>
         <div className="mb-1.5 text-sm font-medium text-brand-muted dark:text-brand-surface/75">По тексту и ML</div>
-        <div className="h-3 overflow-hidden rounded-full bg-brand-line dark:bg-brand-panel-border">
+        <div className="h-3 overflow-hidden rounded-full bg-brand-line ring-1 ring-inset ring-brand-line/40 dark:bg-brand-panel-border dark:ring-brand-panel-border/50">
           <div
-            className="h-full rounded-full bg-brand-red transition-[width] duration-500 ease-out"
+            className="h-full min-h-[100%] rounded-full bg-brand-red transition-[width] duration-500 ease-out"
             style={{ width: `${blendPct}%` }}
           />
         </div>
@@ -90,9 +90,9 @@ function MlConfidenceBar(props: { proba: number }) {
         <span>Уверенность ML</span>
         <span className="font-mono text-brand-ink dark:text-brand-surface">{(props.proba * 100).toFixed(1)}%</span>
       </div>
-      <div className="h-2.5 overflow-hidden rounded-full bg-brand-line dark:bg-brand-panel-border">
+      <div className="h-2.5 overflow-hidden rounded-full bg-brand-line ring-1 ring-inset ring-brand-line/40 dark:bg-brand-panel-border dark:ring-brand-panel-border/50">
         <div
-          className="h-full rounded-full bg-brand-zone-mid transition-[width] duration-500 ease-out dark:bg-brand-zone-mid"
+          className="h-full min-h-[100%] rounded-full bg-brand-zone-mid transition-[width] duration-500 ease-out dark:bg-brand-zone-mid"
           style={{ width: `${pct}%` }}
         />
       </div>
@@ -110,21 +110,21 @@ function BlendComposition(props: { ruleB: number; mlB: number; divB: number }) {
   return (
     <div className="rounded-xl border border-brand-line bg-brand-card p-4 dark:border-brand-panel-border dark:bg-brand-panel">
       <p className="text-sm font-semibold text-brand-ink dark:text-brand-surface">Из чего сложена оценка по тексту</p>
-      <div className="mt-3 h-3 w-full overflow-hidden rounded-full bg-brand-line dark:bg-brand-panel-border">
-        <div className="flex h-full w-full">
+      <div className="mt-3 h-3 w-full overflow-hidden rounded-full bg-brand-line ring-1 ring-inset ring-brand-line/40 dark:bg-brand-panel-border dark:ring-brand-panel-border/50">
+        <div className="flex h-full min-h-0 w-full min-w-0">
           <div
-            className="h-full bg-brand-muted dark:bg-brand-zone-mid"
+            className="h-full min-h-0 bg-brand-muted dark:bg-brand-zone-mid"
             style={{ width: `${pr}%` }}
             title={`Правила: ${ruleB.toFixed(1)}`}
           />
           <div
-            className="h-full bg-brand-zone-mid dark:bg-brand-zone-mid/80"
+            className="h-full min-h-0 bg-brand-zone-mid dark:bg-brand-zone-mid/80"
             style={{ width: `${pm}%` }}
             title={`ML: ${mlB.toFixed(1)}`}
           />
           {pd > 0 ? (
             <div
-              className="h-full bg-brand-line dark:bg-brand-panel-border"
+              className="h-full min-h-0 bg-brand-line dark:bg-brand-panel-border"
               style={{ width: `${pd}%` }}
               title={`Бонус: ${divB.toFixed(1)}`}
             />

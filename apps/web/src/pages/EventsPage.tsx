@@ -325,11 +325,15 @@ export default function EventsPage() {
 
       <div className="rounded-2xl border border-brand-line bg-brand-card shadow-panel-light dark:border-brand-panel-border dark:bg-brand-panel dark:shadow-panel">
         <div className="flex flex-col gap-4 border-b border-brand-line px-3 py-3 dark:border-brand-panel-border sm:px-4 sm:py-4 lg:flex-row lg:items-center lg:justify-between">
-          <h2 className="text-base font-bold text-brand-ink dark:text-brand-surface">Последние события</h2>
-          <div className="flex flex-col gap-3 sm:flex-row sm:flex-wrap sm:items-center sm:justify-end lg:gap-5">
-            <RiskFilterBar value={riskFilter} onChange={setRiskFilter} />
-            <EventTypeFilterControl value={eventTypeFilter} onChange={setEventTypeFilter} />
-            <ListSortControl by={sortBy} dir={sortDir} onChange={setListSort} />
+          <h2 className="shrink-0 text-base font-bold text-brand-ink dark:text-brand-surface">Последние события</h2>
+          <div className="flex min-w-0 flex-1 flex-col gap-3 lg:flex-row lg:flex-nowrap lg:items-center lg:justify-end lg:gap-x-3">
+            <div className="min-w-0 lg:max-w-[min(100%,36rem)]">
+              <RiskFilterBar value={riskFilter} onChange={setRiskFilter} />
+            </div>
+            <div className="flex min-w-0 flex-col gap-2 lg:flex-row lg:items-stretch lg:gap-2">
+              <EventTypeFilterControl value={eventTypeFilter} onChange={setEventTypeFilter} className="w-full lg:w-[13.5rem]" />
+              <ListSortControl by={sortBy} dir={sortDir} onChange={setListSort} className="w-full min-w-0 lg:max-w-[22rem]" />
+            </div>
           </div>
         </div>
         <details className="group/dayfil border-b border-brand-line dark:border-brand-panel-border">
@@ -344,28 +348,28 @@ export default function EventsPage() {
               <path d="M5.23 7.21a.75.75 0 0 1 1.06.02L10 11.168l3.71-3.94a.75.75 0 1 1 1.08 1.04l-4.25 4.5a.75.75 0 0 1-1.08 0l-4.25-4.5a.75.75 0 0 1 .02-1.06Z" />
             </svg>
           </summary>
-          <div className="flex flex-col gap-3 px-3 pb-4 sm:flex-row sm:flex-wrap sm:items-end sm:px-4">
-            <label className="block min-w-[10rem] flex-1 sm:max-w-[12rem]">
+          <div className="grid grid-cols-1 gap-3 px-3 pb-4 sm:grid-cols-2 sm:items-end sm:gap-3 sm:px-4">
+            <label className="min-w-0">
               <span className="text-xs font-medium text-brand-muted">День (по времени события)</span>
               <input
                 type="date"
                 value={draftDay}
                 onChange={(e) => setDraftDay(e.target.value)}
-                className="mt-1 w-full rounded-xl border border-brand-line bg-brand-surface px-3 py-2 text-sm text-brand-ink dark:border-brand-panel-border dark:bg-brand-ink dark:text-brand-surface"
+                className="box-border mt-1 h-11 w-full min-w-0 rounded-xl border border-brand-line bg-brand-surface px-3 py-2.5 text-sm text-brand-ink dark:border-brand-panel-border dark:bg-brand-ink dark:text-brand-surface sm:h-10 sm:py-2"
               />
             </label>
-            <label className="block min-w-0 flex-1 sm:min-w-[12rem] sm:max-w-[18rem]">
+            <label className="min-w-0">
               <span className="text-xs font-medium text-brand-muted">Цифры в номере</span>
               <input
                 value={draftPhone}
                 onChange={(e) => setDraftPhone(e.target.value)}
                 placeholder="отпр. / получ."
                 title="Подстрока цифр в маске отправителя или получателя"
-                className="mt-1 w-full min-w-0 rounded-xl border border-brand-line bg-brand-surface px-3 py-2 text-sm text-brand-ink placeholder:text-xs dark:border-brand-panel-border dark:bg-brand-ink dark:text-brand-surface"
+                className="box-border mt-1 h-11 w-full min-w-0 rounded-xl border border-brand-line bg-brand-surface px-3 py-2.5 text-sm text-brand-ink placeholder:text-xs dark:border-brand-panel-border dark:bg-brand-ink dark:text-brand-surface sm:h-10 sm:py-2"
                 inputMode="numeric"
               />
             </label>
-            <div className="flex flex-wrap gap-2">
+            <div className="flex flex-wrap gap-2 sm:col-span-2">
               <button
                 type="button"
                 onClick={applyDayPhoneFilters}
