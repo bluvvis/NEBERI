@@ -4,7 +4,7 @@
   Перед запуском: образы neberi/api и neberi/web должны быть доступны кластеру
   (docker push в registry курса / ttl.sh при стабильной сети / импорт на ноде microk8s).
 
-  По умолчанию тег образа = sha- + 7 символов последнего коммита main (как пушит Actions). Сначала дождитесь зелёного «Build and push images».
+  По умолчанию тег образа = sha- + 7 символов последнего коммита main (как пушит Actions). Сначала дождитесь зелёного workflow Build and push images.
   Явно :latest:  .\deploy\scripts\Deploy-Team11.ps1 -ImageTag latest
 
   Пример с ttl.sh (после успешного docker push):
@@ -40,7 +40,7 @@ function Resolve-DefaultImageTag {
     return "sha-$short"
   }
   catch {
-    Write-Host "WARN: не удалось получить SHA main с api.github.com — $($_.Exception.Message). Используем тег latest."
+    Write-Host "WARN: не удалось получить SHA main с api.github.com - $($_.Exception.Message). Используем тег latest."
     return "latest"
   }
 }
@@ -58,7 +58,7 @@ if ($owner -ne "") {
   if ($tagUse -eq "") {
     $tagUse = Resolve-DefaultImageTag -Repo $GithubRepo.Trim()
   }
-  Write-Host "Образы ghcr.io/${owner}/* :$tagUse (убедитесь, что Actions «Build and push images» для этого коммита уже зелёный)"
+  Write-Host "Образы ghcr.io/${owner}/neberi-api и neberi-web, тег $tagUse (сначала зелёный Build and push images в GitHub для этого коммита)."
   if ($ApiImage -eq "") { $ApiImage = "ghcr.io/${owner}/neberi-api:$tagUse" }
   if ($WebImage -eq "") { $WebImage = "ghcr.io/${owner}/neberi-web:$tagUse" }
 }
