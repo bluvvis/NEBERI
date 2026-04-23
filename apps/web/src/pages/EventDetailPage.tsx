@@ -227,7 +227,7 @@ export default function EventDetailPage() {
     : "/reputation";
 
   return (
-    <div className="mx-auto max-w-7xl px-4 py-6 lg:px-8">
+    <div className="mx-auto max-w-7xl px-3 py-5 sm:px-4 sm:py-6 lg:px-8">
       <Toast message={toast?.text ?? null} tone={toast?.tone ?? "success"} onDismiss={dismissToast} />
       <Link
         to={backPath}
@@ -282,8 +282,8 @@ export default function EventDetailPage() {
         </div>
       ) : null}
 
-      <div className="grid gap-8 lg:grid-cols-12 lg:items-start">
-        <aside className="flex flex-col items-center gap-5 lg:col-span-3 lg:items-start">
+      <div className="grid min-w-0 gap-6 sm:gap-8 lg:grid-cols-12 lg:items-start">
+        <aside className="flex min-w-0 flex-col items-center gap-5 lg:col-span-3 lg:items-start">
           <ScoreRing riskScore={data.risk_score} riskLevel={data.risk_level} size="lg" />
           <div
             className={`w-full max-w-md text-center lg:text-left ${sideCard} border-brand-line/90 shadow-md dark:border-brand-panel-border`}
@@ -322,7 +322,7 @@ export default function EventDetailPage() {
         </aside>
 
         <div
-          className={`relative overflow-hidden p-5 sm:p-6 lg:col-span-6 ${panelCard} ${detailPanelRiskClass(data.risk_level)}`}
+          className={`relative min-w-0 overflow-hidden p-4 sm:p-6 lg:col-span-6 ${panelCard} ${detailPanelRiskClass(data.risk_level)}`}
         >
           {data.score_explanation ? (
             <section aria-labelledby="score-explain-heading">
@@ -503,7 +503,7 @@ export default function EventDetailPage() {
           </section>
         </div>
 
-        <aside className="flex flex-col gap-4 lg:col-span-3">
+        <aside className="flex min-w-0 flex-col gap-4 lg:col-span-3">
           <section className={sideCard} aria-labelledby="sender-rep-heading">
             <h2 id="sender-rep-heading" className="text-base font-bold text-brand-ink dark:text-brand-surface">
               Репутация отправителя

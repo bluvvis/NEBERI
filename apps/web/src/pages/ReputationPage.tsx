@@ -185,7 +185,7 @@ export default function ReputationPage() {
     "mt-1.5 w-full rounded-xl border border-brand-line bg-brand-surface px-3 py-2 text-base text-brand-ink outline-none dark:border-brand-panel-border dark:bg-brand-ink dark:text-brand-surface";
 
   return (
-    <div className="mx-auto max-w-3xl px-4 py-8">
+    <div className="mx-auto max-w-3xl px-3 py-6 sm:px-4 sm:py-8">
       <Toast message={toast?.text ?? null} tone={toast?.tone ?? "success"} onDismiss={dismissToast} />
       <Link
         to="/"

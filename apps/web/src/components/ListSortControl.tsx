@@ -61,10 +61,10 @@ export function ListSortControl({
 
   return (
     <div className="flex flex-wrap items-stretch gap-2" role="group" aria-label="Сортировка списка">
-      <div className="group/sort relative min-w-[13.5rem] max-w-[min(100%,20rem)]">
+      <div className="group/sort relative w-full min-w-0 max-w-[min(100%,20rem)] sm:min-w-[13.5rem]">
         <div
           className={[
-            "flex h-10 cursor-default select-none items-center rounded-xl border border-brand-line bg-brand-surface px-3 text-sm font-medium text-brand-ink transition-colors",
+            "flex min-h-[2.75rem] cursor-default select-none items-center rounded-xl border border-brand-line bg-brand-surface px-3 py-2 text-sm font-medium text-brand-ink transition-colors sm:h-10 sm:min-h-0 sm:py-0",
             "dark:border-brand-panel-border dark:bg-brand-ink/50 dark:text-brand-surface",
             "group-hover/sort:rounded-b-none group-hover/sort:border-b-transparent dark:group-hover/sort:border-b-transparent",
           ].join(" ")}
@@ -103,7 +103,7 @@ export function ListSortControl({
       </div>
 
       <div
-        className="flex h-10 shrink-0 overflow-hidden rounded-xl border border-brand-line bg-brand-card dark:border-brand-panel-border dark:bg-brand-panel"
+        className="flex h-11 w-full shrink-0 overflow-hidden rounded-xl border border-brand-line bg-brand-card sm:h-10 sm:w-auto dark:border-brand-panel-border dark:bg-brand-panel"
         role="group"
         aria-label="Направление сортировки"
       >
@@ -113,7 +113,7 @@ export function ListSortControl({
           aria-pressed={dir === "asc"}
           onClick={() => onChange(by, "asc")}
           className={[
-            "grid h-10 w-10 place-items-center transition-colors",
+            "grid min-h-[2.75rem] flex-1 place-items-center transition-colors sm:h-10 sm:min-h-0 sm:w-10 sm:flex-none",
             dir === "asc"
               ? "bg-brand-red/12 text-brand-red dark:bg-brand-red/20 dark:text-brand-surface"
               : "text-brand-muted hover:bg-brand-surface hover:text-brand-ink dark:hover:bg-brand-ink/60 dark:hover:text-brand-surface",
@@ -128,7 +128,7 @@ export function ListSortControl({
           aria-pressed={dir === "desc"}
           onClick={() => onChange(by, "desc")}
           className={[
-            "grid h-10 w-10 place-items-center transition-colors",
+            "grid min-h-[2.75rem] flex-1 place-items-center transition-colors sm:h-10 sm:min-h-0 sm:w-10 sm:flex-none",
             dir === "desc"
               ? "bg-brand-red/12 text-brand-red dark:bg-brand-red/20 dark:text-brand-surface"
               : "text-brand-muted hover:bg-brand-surface hover:text-brand-ink dark:hover:bg-brand-ink/60 dark:hover:text-brand-surface",

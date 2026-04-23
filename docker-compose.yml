@@ -19,6 +19,12 @@ services:
     build:
       context: ./apps/api
       dockerfile: Dockerfile
+    healthcheck:
+      test: ["CMD-SHELL", "python -c \"import urllib.request; urllib.request.urlopen('http://127.0.0.1:8000/healthcheck', timeout=3).read()\""]
+      interval: 5s
+      timeout: 5s
+      retries: 12
+      start_period: 15s
     environment:
       DATABASE_URL: postgresql+psycopg2://neberi:neberi@postgres:5432/neberi
       POLICY_PATH: /app/policies/default_rules.yaml
@@ -27,7 +33,7 @@ services:
       # Общий ключ: симуляция, отзывы, репутация (тот же текст в build.args web → VITE_INGEST_API_KEY).
       # Чтобы API принимал запросы без заголовка — закомментируйте строку ниже и пересоберите web без args.
       INGEST_API_KEY: "neberi-dev-docker-ingest"
-      # CORS_ALLOW_ORIGINS: "http://localhost:5173,http://localhost:8080"
+      CORS_ALLOW_ORIGINS: "http://localhost:5173,http://localhost:8080,http://127.0.0.1:8080"
     volumes:
       - ./apps/api/policies:/app/policies:ro
       # Свежий joblib/manifest после train_export без пересборки образа
@@ -48,7 +54,8 @@ services:
     ports:
       - "8080:80"
     depends_on:
-      - api
+      api:
+        condition: service_healthy
 
 volumes:
   pgdata:

@@ -26,7 +26,7 @@ export function EventTypeFilterControl({
   return (
     <div
       ref={rootRef}
-      className="group/etype relative min-w-[10.5rem] max-w-[min(100%,18rem)] outline-none"
+      className="group/etype relative w-full min-w-0 max-w-[min(100%,18rem)] outline-none sm:min-w-[10.5rem]"
       role="group"
       aria-label="Тип события"
       tabIndex={0}
@@ -36,7 +36,7 @@ export function EventTypeFilterControl({
     >
       <div
         className={[
-          "flex h-10 cursor-default select-none items-center rounded-xl border border-brand-line bg-brand-surface px-3 text-sm font-medium text-brand-ink transition-colors",
+          "flex min-h-[2.75rem] cursor-default select-none items-center rounded-xl border border-brand-line bg-brand-surface px-3 py-2 text-sm font-medium text-brand-ink transition-colors sm:h-10 sm:min-h-0 sm:py-0",
           "dark:border-brand-panel-border dark:bg-brand-ink/50 dark:text-brand-surface",
           "group-hover/etype:rounded-b-none group-hover/etype:border-b-transparent dark:group-hover/etype:border-b-transparent",
         ].join(" ")}

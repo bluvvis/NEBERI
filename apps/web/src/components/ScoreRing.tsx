@@ -21,9 +21,9 @@ const SIZE_STYLES = {
     inner: "h-[2.65rem] w-[2.65rem] text-sm",
   },
   lg: {
-    box: "h-[5.75rem] w-[5.75rem]",
-    pad: "p-[0.7rem]",
-    inner: "h-[4.1rem] w-[4.1rem] text-lg",
+    box: "h-[4.75rem] w-[4.75rem] sm:h-[5.75rem] sm:w-[5.75rem]",
+    pad: "p-[0.55rem] sm:p-[0.7rem]",
+    inner: "h-[3.35rem] w-[3.35rem] text-base sm:h-[4.1rem] sm:w-[4.1rem] sm:text-lg",
   },
 } as const;
 

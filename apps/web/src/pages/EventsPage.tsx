@@ -251,25 +251,25 @@ export default function EventsPage() {
   }
 
   return (
-    <div className="mx-auto max-w-6xl px-4 py-8">
+    <div className="mx-auto max-w-6xl px-3 py-6 sm:px-4 sm:py-8">
       <Toast
         message={toast?.text ?? null}
         tone={toast?.tone ?? "success"}
         onDismiss={dismissToast}
       />
 
-      <header className="mb-8 flex flex-col gap-5 sm:flex-row sm:items-start sm:justify-between sm:gap-6">
+      <header className="mb-6 flex flex-col gap-4 sm:mb-8 sm:flex-row sm:items-start sm:justify-between sm:gap-6">
         <div className="min-w-0">
           <p className="mb-2 text-xs font-semibold uppercase tracking-[0.12em] text-brand-muted dark:text-brand-surface/55">
             Консоль сервиса
           </p>
           <h1
-            className="font-brand inline-block origin-left scale-x-[1.14] text-4xl font-bold tracking-tight text-brand-ink dark:text-brand-surface sm:scale-x-[1.12] sm:text-5xl"
+            className="font-brand inline-block origin-left scale-x-[1.08] text-3xl font-bold tracking-tight text-brand-ink dark:text-brand-surface max-[380px]:text-[1.65rem] sm:scale-x-[1.12] sm:text-5xl"
             translate="no"
           >
             NeBeri
           </h1>
-          <p className="mt-3 max-w-xl text-base leading-relaxed text-brand-muted dark:text-brand-surface/75">
+          <p className="mt-3 max-w-xl text-sm leading-relaxed text-brand-muted sm:text-base dark:text-brand-surface/75">
             Правила и ML по тексту события. В карточке — графики и кратко; технические детали и реквизиты —{" "}
             {"в\u00A0блоке "}
             <span className="whitespace-nowrap font-semibold text-brand-red">«Подробнее для аудита».</span>
@@ -280,13 +280,13 @@ export default function EventsPage() {
             </p>
           )}
         </div>
-        <div className="flex shrink-0 flex-wrap gap-2 sm:justify-end">
+        <div className="flex w-full shrink-0 flex-col gap-2 sm:w-auto sm:flex-row sm:flex-wrap sm:justify-end">
           <button
             type="button"
             onClick={() => seed.mutate()}
             disabled={seed.isPending}
             title={`Случайный набор из пула до ${demoScenarioPoolMax} демо-событий`}
-            className="rounded-xl bg-brand-red px-5 py-3 text-base font-semibold text-white shadow-md shadow-brand-btn transition hover:opacity-90 active:scale-[0.98] disabled:opacity-50 motion-reduce:active:scale-100"
+            className="min-h-[2.75rem] rounded-xl bg-brand-red px-4 py-3 text-base font-semibold text-white shadow-md shadow-brand-btn transition hover:opacity-90 active:scale-[0.98] disabled:opacity-50 motion-reduce:active:scale-100 sm:min-h-0 sm:px-5"
           >
             {seed.isPending ? "Отправка…" : "Симуляция"}
           </button>
@@ -295,7 +295,7 @@ export default function EventsPage() {
             onClick={onPurgeClick}
             disabled={purge.isPending}
             className={[
-              "rounded-xl border px-4 py-3 text-base font-semibold transition disabled:opacity-50",
+              "min-h-[2.75rem] rounded-xl border px-4 py-3 text-base font-semibold transition disabled:opacity-50 sm:min-h-0",
               purgeArmed
                 ? "border-brand-red/50 bg-brand-red/10 text-brand-red dark:border-brand-red/45 dark:bg-brand-red/15 dark:text-brand-surface"
                 : "border-brand-line bg-brand-card text-brand-ink hover:border-brand-muted dark:border-brand-panel-border dark:bg-brand-panel dark:text-brand-surface dark:hover:border-brand-muted",
@@ -307,7 +307,7 @@ export default function EventsPage() {
             <button
               type="button"
               onClick={() => setPurgeArmed(false)}
-              className="rounded-xl border border-brand-line px-3 py-3 text-sm font-semibold text-brand-muted dark:border-brand-panel-border dark:text-brand-surface/75"
+              className="min-h-[2.75rem] rounded-xl border border-brand-line px-3 py-3 text-sm font-semibold text-brand-muted dark:border-brand-panel-border dark:text-brand-surface/75 sm:min-h-0"
             >
               Отмена
             </button>
@@ -324,7 +324,7 @@ export default function EventsPage() {
       <StatStrip listEvents={listData} distributionSample={distributionForStrip} listQuerySuffix={eventListQuerySuffix} />
 
       <div className="overflow-hidden rounded-2xl border border-brand-line bg-brand-card shadow-panel-light dark:border-brand-panel-border dark:bg-brand-panel dark:shadow-panel">
-        <div className="flex flex-col gap-4 border-b border-brand-line px-4 py-4 dark:border-brand-panel-border lg:flex-row lg:items-center lg:justify-between">
+        <div className="flex flex-col gap-4 border-b border-brand-line px-3 py-3 dark:border-brand-panel-border sm:px-4 sm:py-4 lg:flex-row lg:items-center lg:justify-between">
           <h2 className="text-base font-bold text-brand-ink dark:text-brand-surface">Последние события</h2>
           <div className="flex flex-col gap-3 sm:flex-row sm:flex-wrap sm:items-center sm:justify-end lg:gap-5">
             <RiskFilterBar value={riskFilter} onChange={setRiskFilter} />
@@ -333,7 +333,7 @@ export default function EventsPage() {
           </div>
         </div>
         <details className="group/dayfil border-b border-brand-line dark:border-brand-panel-border">
-          <summary className="flex cursor-pointer list-none items-center gap-2 px-4 py-2.5 text-sm font-semibold text-brand-muted transition hover:text-brand-ink dark:text-brand-surface/70 dark:hover:text-brand-surface [&::-webkit-details-marker]:hidden">
+          <summary className="flex cursor-pointer list-none items-center gap-2 px-3 py-2.5 text-sm font-semibold text-brand-muted transition hover:text-brand-ink dark:text-brand-surface/70 dark:hover:text-brand-surface sm:px-4 [&::-webkit-details-marker]:hidden">
             <span>День и номер</span>
             <svg
               className="h-4 w-4 shrink-0 text-brand-muted transition-transform duration-200 group-open/dayfil:-rotate-180 dark:text-brand-surface/60"
@@ -344,7 +344,7 @@ export default function EventsPage() {
               <path d="M5.23 7.21a.75.75 0 0 1 1.06.02L10 11.168l3.71-3.94a.75.75 0 1 1 1.08 1.04l-4.25 4.5a.75.75 0 0 1-1.08 0l-4.25-4.5a.75.75 0 0 1 .02-1.06Z" />
             </svg>
           </summary>
-          <div className="flex flex-col gap-3 px-4 pb-4 sm:flex-row sm:flex-wrap sm:items-end">
+          <div className="flex flex-col gap-3 px-3 pb-4 sm:flex-row sm:flex-wrap sm:items-end sm:px-4">
             <label className="block min-w-[10rem] flex-1 sm:max-w-[12rem]">
               <span className="text-xs font-medium text-brand-muted">День (по времени события)</span>
               <input
@@ -413,7 +413,7 @@ export default function EventsPage() {
                     to={eventListQuerySuffix ? `/events/${e.id}?${eventListQuerySuffix}` : `/events/${e.id}`}
                     onClick={() => persistEventsListScrollY()}
                     className={[
-                      "group relative z-[1] grid w-full max-w-full min-w-0 grid-cols-1 gap-2.5 px-4 py-3 transition-[background-color,box-shadow,transform] ease-out sm:h-[7.125rem] sm:max-h-[7.125rem] sm:grid-cols-[3.75rem_minmax(0,1fr)_10.5rem] sm:items-stretch sm:gap-x-3 sm:gap-y-0 sm:overflow-x-auto sm:overflow-y-clip sm:py-2.5 sm:pr-3",
+                      "group relative z-[1] grid w-full max-w-full min-w-0 grid-cols-1 gap-2.5 px-3 py-3.5 transition-[background-color,box-shadow,transform] ease-out sm:h-[7.125rem] sm:max-h-[7.125rem] sm:grid-cols-[3.75rem_minmax(0,1fr)_10.5rem] sm:items-stretch sm:gap-x-3 sm:gap-y-0 sm:overflow-x-auto sm:overflow-y-clip sm:px-4 sm:py-2.5 sm:pr-3",
                       "duration-200 hover:z-[2] hover:-translate-y-0.5 hover:bg-brand-surface hover:shadow-md motion-reduce:hover:translate-y-0 dark:hover:bg-brand-ink/35",
                       listRowRiskShellClass(e.risk_level),
                       visitedCallLowMediumDimClass(e.event_type, e.risk_level, e.id, visitTimesMap),

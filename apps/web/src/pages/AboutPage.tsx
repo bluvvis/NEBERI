@@ -1,4 +1,5 @@
 import { Link } from "react-router-dom";
+import { OpenApiDocsLink } from "@/components/OpenApiDocsLink";
 
 const sections = [
   {
@@ -45,19 +46,14 @@ export default function AboutPage() {
         поверх REST API.
       </p>
 
-      <div className="mt-8 flex flex-wrap gap-3">
+      <div className="mt-8 flex max-sm:flex-col max-sm:gap-3 sm:flex-wrap sm:items-stretch sm:gap-3">
         <Link
           to="/"
-          className="rounded-xl bg-brand-red px-5 py-3 text-base font-semibold text-white shadow-md shadow-brand-btn transition hover:opacity-90"
+          className="inline-flex items-center justify-center rounded-xl bg-brand-red px-5 py-3 text-center text-base font-semibold text-white shadow-md shadow-brand-btn transition hover:opacity-90 max-sm:min-h-[3rem] sm:min-h-0"
         >
           К ленте событий
         </Link>
-        <a
-          href="/docs"
-          className="rounded-xl border border-brand-line bg-brand-card px-5 py-3 text-base font-semibold text-brand-ink transition hover:border-brand-muted dark:border-brand-panel-border dark:bg-brand-panel dark:text-brand-surface dark:hover:border-brand-muted"
-        >
-          OpenAPI
-        </a>
+        <OpenApiDocsLink variant="pagePill" />
       </div>
 
       <div className="mt-14 space-y-8">

@@ -13,7 +13,7 @@ type Props = {
 function RiskHistogramValue({ riskHist }: { riskHist: NonNullable<ReturnType<typeof computeRiskHistogram>> }) {
   const sep = <span className="text-brand-muted/70 dark:text-brand-surface/40">·</span>;
   return (
-    <span className="inline-flex flex-nowrap items-baseline gap-x-2 overflow-x-auto whitespace-nowrap font-mono text-xl font-bold tracking-tight text-brand-ink dark:text-brand-surface">
+    <span className="inline-flex max-w-full flex-nowrap items-baseline gap-x-2 overflow-x-auto whitespace-nowrap font-mono text-base font-bold tracking-tight text-brand-ink dark:text-brand-surface sm:text-xl">
       <span>{riskHist.low}</span>
       {sep}
       <span>{riskHist.medium}</span>
@@ -91,7 +91,7 @@ export function StatStrip({ listEvents, distributionSample, listQuerySuffix = ""
                 ) : null}
               </div>
               <div
-                className={`relative mt-2 min-w-0 text-2xl font-bold tracking-tight text-brand-ink dark:text-brand-surface ${c.mono && typeof c.value === "string" ? "font-mono text-xl" : ""}`}
+                className={`relative mt-2 min-w-0 text-xl font-bold tracking-tight text-brand-ink dark:text-brand-surface sm:text-2xl ${c.mono && typeof c.value === "string" ? "font-mono text-lg sm:text-xl" : ""}`}
               >
                 {c.value}
               </div>
@@ -99,7 +99,7 @@ export function StatStrip({ listEvents, distributionSample, listQuerySuffix = ""
           );
 
           const shellClass =
-            "animate-fade-up relative block h-full overflow-hidden rounded-2xl border border-brand-line bg-brand-card p-4 text-left shadow-panel-light motion-reduce:animate-none dark:border-brand-panel-border dark:bg-brand-panel dark:shadow-panel";
+            "animate-fade-up relative block h-full overflow-hidden rounded-2xl border border-brand-line bg-brand-card p-3.5 text-left shadow-panel-light motion-reduce:animate-none dark:border-brand-panel-border dark:bg-brand-panel dark:shadow-panel sm:p-4";
 
           if (c.href) {
             return (

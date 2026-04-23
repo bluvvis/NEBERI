@@ -1,6 +1,7 @@
 import { Link } from "react-router-dom";
 import { useAuth } from "@/auth/AuthContext";
 import { UserAvatar } from "@/components/UserAvatar";
+import { OpenApiDocsLink } from "@/components/OpenApiDocsLink";
 import { resolveAuthAvatarUrl } from "@/lib/api";
 import { useTheme } from "@/theme/ThemeProvider";
 
@@ -8,14 +9,6 @@ function IconDoc({ className }: { className?: string }) {
   return (
     <svg className={className} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.5} aria-hidden>
       <path strokeLinecap="round" strokeLinejoin="round" d="M19.5 14.25v-2.625a3.375 3.375 0 0 0-3.375-3.375h-1.5A1.125 1.125 0 0 1 13.5 7.125v-1.5a3.375 3.375 0 0 0-3.375-3.375H8.25m0 12.75h7.5m-7.5 3H12M10.5 2.25H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 0 0-9-9Z" />
-    </svg>
-  );
-}
-
-function IconCode({ className }: { className?: string }) {
-  return (
-    <svg className={className} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.5} aria-hidden>
-      <path strokeLinecap="round" strokeLinejoin="round" d="M17.25 6.75 22 12l-4.75 5.25m-10.5 0L2 12l4.75-5.25" />
     </svg>
   );
 }
@@ -54,7 +47,7 @@ export function HeaderMoreMenu() {
     >
       <div
         className={[
-          "flex cursor-default select-none items-center gap-1.5 rounded-xl border border-brand-line bg-brand-surface px-3 py-2 text-sm font-semibold text-brand-ink transition-colors",
+          "flex min-h-[2.75rem] cursor-default select-none items-center gap-1.5 rounded-xl border border-brand-line bg-brand-surface px-3 py-2 text-sm font-semibold text-brand-ink transition-colors sm:min-h-0 sm:py-2",
           "dark:border-brand-panel-border dark:bg-brand-ink/50 dark:text-brand-surface",
           "group-hover/more:rounded-b-none group-hover/more:border-b-transparent dark:group-hover/more:border-b-transparent",
           "group-focus-visible/more:rounded-b-none group-focus-visible/more:border-b-transparent",
@@ -78,15 +71,12 @@ export function HeaderMoreMenu() {
           "group-focus-within/more:visible group-focus-within/more:opacity-100",
         ].join(" ")}
       >
-        <div className="rounded-b-xl rounded-tl-xl border border-brand-line bg-brand-card py-1 shadow-xl dark:border-brand-panel-border dark:bg-brand-panel dark:shadow-black/45">
+        <div className="min-w-[min(100vw-1.5rem,18rem)] rounded-b-xl rounded-tl-xl border border-brand-line bg-brand-card py-1 shadow-xl dark:border-brand-panel-border dark:bg-brand-panel dark:shadow-black/45 sm:min-w-[14rem]">
           <Link to="/about" className={rowClass}>
             <IconDoc className="h-5 w-5 shrink-0 text-brand-red opacity-90" />
             О продукте
           </Link>
-          <a href="/docs" target="_blank" rel="noopener noreferrer" className={rowClass}>
-            <IconCode className="h-5 w-5 shrink-0 text-brand-muted dark:text-brand-surface/70" />
-            OpenAPI
-          </a>
+          <OpenApiDocsLink variant="menuRow" />
           {user ? (
             <Link to="/profile" className={rowClass}>
               <UserAvatar src={resolveAuthAvatarUrl(user.avatar_url, avatarCacheBust)} alt="" size="sm" />

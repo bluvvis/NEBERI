@@ -35,39 +35,45 @@ export function AppShell() {
 
       <header className="sticky top-0 z-40 border-b border-brand-line bg-brand-card/90 shadow-sm backdrop-blur-xl transition-[background-color,box-shadow] duration-500 dark:border-brand-panel-border dark:bg-brand-panel/95 dark:shadow-black/25">
         <div className="pointer-events-none absolute inset-x-0 bottom-0 h-px bg-gradient-to-r from-transparent via-brand-red/45 to-transparent motion-reduce:animate-none motion-reduce:opacity-70 animate-shell-header-line dark:via-brand-red/35" />
-        <div className="relative mx-auto flex max-w-6xl items-center justify-between gap-4 px-4 py-3.5">
+        <div className="relative mx-auto flex max-w-6xl flex-col gap-3 px-3 py-3 sm:flex-row sm:items-center sm:justify-between sm:gap-4 sm:px-4 sm:py-3.5">
           <Link
             to="/"
-            className="group/brand flex min-w-0 items-center gap-3 rounded-xl p-1 -m-1 outline-none transition-transform duration-300 ease-out hover:scale-[1.02] focus-visible:ring-2 focus-visible:ring-brand-red/40 focus-visible:ring-offset-2 focus-visible:ring-offset-brand-surface motion-reduce:transition-colors motion-reduce:hover:scale-100 dark:focus-visible:ring-offset-brand-ink"
+            className="group/brand flex min-w-0 items-center gap-2.5 rounded-xl p-1 -m-1 outline-none transition-transform duration-300 ease-out hover:scale-[1.02] focus-visible:ring-2 focus-visible:ring-brand-red/40 focus-visible:ring-offset-2 focus-visible:ring-offset-brand-surface motion-reduce:transition-colors motion-reduce:hover:scale-100 sm:gap-3 dark:focus-visible:ring-offset-brand-ink"
           >
             <div
-              className="flex h-10 w-[2.75rem] shrink-0 items-center justify-center overflow-hidden transition-[transform,opacity] duration-300 ease-out group-hover/brand:opacity-95"
+              className="flex h-9 w-10 shrink-0 items-center justify-center overflow-hidden transition-[transform,opacity] duration-300 ease-out group-hover/brand:opacity-95 sm:h-10 sm:w-[2.75rem]"
               aria-hidden
             >
               <img
                 src="/mts_logo.png"
                 alt=""
-                className="h-8 w-auto max-h-8 object-contain object-center"
+                className="h-7 w-auto max-h-7 object-contain object-center sm:h-8 sm:max-h-8"
                 width={44}
                 height={32}
                 decoding="async"
               />
             </div>
             <div className="min-w-0">
-              <p className="truncate text-base font-medium text-brand-muted dark:text-brand-surface/70">
-                Сигналы о мошенничестве
+              <p className="truncate text-sm font-medium text-brand-muted sm:text-base dark:text-brand-surface/70">
+                <span className="max-sm:hidden">Сигналы о мошенничестве</span>
+                <span className="sm:hidden">NeBeri</span>
               </p>
             </div>
           </Link>
-          <div className="flex flex-wrap items-center justify-end gap-2">
-            <nav className="flex flex-wrap items-center gap-1 sm:gap-2" aria-label="Основная навигация">
-              <NavLink to="/" end className={navClass}>
+          <div className="-mx-1 flex min-w-0 items-center justify-between gap-2 max-sm:pb-0.5 sm:mx-0 sm:justify-end">
+            <nav
+              className="flex min-w-0 flex-1 items-center gap-1 overflow-x-auto overflow-y-visible [-ms-overflow-style:none] [scrollbar-width:none] sm:flex-none sm:gap-2 [&::-webkit-scrollbar]:hidden"
+              aria-label="Основная навигация"
+            >
+              <NavLink to="/" end className={`${navClass} max-sm:shrink-0 max-sm:whitespace-nowrap`}>
                 Лента
               </NavLink>
-              <NavLink to="/reputation" className={navClass}>
+              <NavLink to="/reputation" className={`${navClass} max-sm:shrink-0 max-sm:whitespace-nowrap`}>
                 Репутация
               </NavLink>
-              <HeaderMoreMenu />
+              <div className="max-sm:shrink-0">
+                <HeaderMoreMenu />
+              </div>
             </nav>
           </div>
         </div>
@@ -79,7 +85,7 @@ export function AppShell() {
         </div>
       </main>
 
-      <footer className="border-t border-brand-line bg-brand-card py-4 text-center text-sm text-brand-muted transition-colors dark:border-brand-panel-border dark:bg-brand-panel dark:text-brand-surface/60">
+      <footer className="border-t border-brand-line bg-brand-card px-2 py-3 text-center text-xs text-brand-muted transition-colors dark:border-brand-panel-border dark:bg-brand-panel dark:text-brand-surface/60 sm:py-4 sm:text-sm">
         Учебный модуль · SPA · компонентная архитектура
       </footer>
     </div>
