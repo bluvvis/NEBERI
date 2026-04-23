@@ -1,8 +1,12 @@
 import type { FraudEvent } from "@/types";
 
-/** Число для метрик ленты: скор уровня риска (max правила / смесь), как в кольце и API. */
+/**
+ * Число для кольца и метрик ленты.
+ * В `EventOut` поле `risk_score` уже пересчитано на бэке (max правила/смесь + живая дельта репутации),
+ * а `score_explanation.effective_for_risk_level` — снимок на момент ingest без дельты блок/доверие.
+ */
 export function displayNumericScore(e: FraudEvent): number {
-  return e.score_explanation?.effective_for_risk_level ?? e.risk_score;
+  return e.risk_score;
 }
 
 /** Агрегаты по текущему списку (например, с учётом фильтра). */

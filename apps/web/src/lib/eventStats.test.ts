@@ -29,10 +29,10 @@ describe("computeListStats", () => {
     expect(computeListStats(list)).toEqual({ n: 3, avg: 20, max: 30 });
   });
 
-  it("uses effective_for_risk_level when present", () => {
+  it("uses risk_score (в т.ч. после дельты репутации; effective в JSON может отставать)", () => {
     const list = [
       base({
-        risk_score: 40,
+        risk_score: 68,
         score_explanation: {
           rule_score: 56,
           blended_score: 40,
@@ -43,7 +43,7 @@ describe("computeListStats", () => {
           rules_fired_count: 2,
           ml_fraud_proba: 0.1,
           ml_blend_weight: 0.42,
-          effective_for_risk_level: 56,
+          effective_for_risk_level: 50,
           low_max: 20,
           medium_max: 54,
           fairness_notes: [],
@@ -51,7 +51,7 @@ describe("computeListStats", () => {
       }),
       base({ risk_score: 10 }),
     ];
-    expect(computeListStats(list)).toEqual({ n: 2, avg: 33, max: 56 });
+    expect(computeListStats(list)).toEqual({ n: 2, avg: 39, max: 68 });
   });
 });
 
