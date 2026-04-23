@@ -15,6 +15,7 @@ import {
 } from "@/lib/api";
 import { EVENT_TYPE_SHORT_LABEL } from "@/lib/eventTypeUi";
 import type { FeedbackKind, FraudEventType } from "@/types";
+import { displayNumericScore } from "@/lib/eventStats";
 import { patchCachedEventInLists } from "@/lib/eventsQueryMerge";
 import { detailPanelRiskClass } from "@/lib/riskChrome";
 import { eventsFeedPath } from "@/lib/riskListQuery";
@@ -294,7 +295,7 @@ export default function EventDetailPage() {
 
       <div className="grid min-w-0 gap-6 sm:gap-8 lg:grid-cols-12 lg:items-start">
         <aside className="flex min-w-0 flex-col items-center gap-5 lg:col-span-3 lg:items-start">
-          <ScoreRing riskScore={data.risk_score} riskLevel={data.risk_level} size="lg" />
+          <ScoreRing riskScore={displayNumericScore(data)} riskLevel={data.risk_level} size="lg" />
           <div
             className={`w-full max-w-md text-center lg:text-left ${sideCard} border-brand-line/90 shadow-md dark:border-brand-panel-border`}
           >

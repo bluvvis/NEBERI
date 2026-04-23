@@ -12,7 +12,9 @@ export function listRowRiskBarClass(
   const visited =
     eventId != null && visitTimes != null && typeof visitTimes[eventId] === "number" && Number.isFinite(visitTimes[eventId]);
   if (level === "high") {
-    return visited ? "bg-brand-red/72 dark:bg-brand-red/68" : "bg-brand-red";
+    if (!visited) return "bg-brand-red";
+    /** После просмотра high — серая полоска как у low/medium; красная обводка «только что» — в lastVisitedRowClass. */
+    return "bg-brand-zone-low/90 dark:bg-brand-zone-low/70";
   }
   if (!visited) return "bg-transparent";
   /** После просмотра low/medium — одинаковый светло-серый акцент. */

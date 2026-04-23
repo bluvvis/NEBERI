@@ -13,9 +13,9 @@ describe("lastVisitedRowClass", () => {
 describe("listRowRiskBarClass", () => {
   const visits = { e1: 1, x: 1 };
 
-  it("high: full red when not visited, softer red when visited", () => {
+  it("high: full red when not visited; gray bar when visited (как low/medium)", () => {
     expect(listRowRiskBarClass("high")).toBe("bg-brand-red");
-    expect(listRowRiskBarClass("high", "e1", visits)).toMatch(/bg-brand-red\/72/);
+    expect(listRowRiskBarClass("high", "e1", visits)).toMatch(/zone-low/);
   });
 
   it("low/medium: bar only when visited; medium uses same tint as low", () => {

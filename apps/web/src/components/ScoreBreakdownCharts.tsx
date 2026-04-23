@@ -26,21 +26,17 @@ function ThresholdRuler(props: {
   return (
     <div className="w-full pt-1">
       <p className="text-sm font-semibold text-brand-ink dark:text-brand-surface">Шкала риска (0–100)</p>
-      <div className="relative mt-3">
-        <div
-          className="relative flex h-2.5 w-full overflow-hidden rounded-full bg-brand-line dark:bg-brand-panel-border"
-          role="img"
-          aria-label={`Зоны: низкий до ${lowMax}, средний до ${mediumMax}, выше — высокий. Итог ${effective}.`}
-        >
+      <div className="relative mt-3 h-4 w-full" role="img" aria-label={`Зоны: низкий до ${lowMax}, средний до ${mediumMax}, выше — высокий. Итог ${effective}.`}>
+        <div className="absolute inset-x-0 top-1/2 flex h-2.5 w-full -translate-y-1/2 overflow-hidden rounded-full bg-brand-line dark:bg-brand-panel-border">
           <div style={{ width: `${lowPct}%` }} className="h-full shrink-0 bg-brand-zone-low" />
           <div style={{ width: `${midPct}%` }} className="h-full shrink-0 bg-brand-zone-mid" />
           <div style={{ width: `${highPct}%` }} className="h-full shrink-0 bg-brand-zone-high" />
-          <div
-            className="pointer-events-none absolute top-1/2 z-10 h-3 w-0.5 rounded-full bg-brand-red shadow-sm ring-1 ring-brand-red/30"
-            style={{ left: `${markerPct}%`, transform: "translate(-50%, -50%)" }}
-            aria-hidden
-          />
         </div>
+        <div
+          className="pointer-events-none absolute top-1/2 z-20 h-3.5 w-3.5 -translate-x-1/2 -translate-y-1/2 rounded-full border-2 border-black/80 bg-white shadow-md dark:border-black dark:bg-white"
+          style={{ left: `${markerPct}%` }}
+          aria-hidden
+        />
       </div>
       <p className="mt-2 text-sm leading-snug text-brand-muted dark:text-brand-surface/70">
         низкий ≤{lowMax} · средний ≤{mediumMax} · выше — высокий

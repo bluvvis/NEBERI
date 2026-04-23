@@ -42,6 +42,7 @@ import {
   listRowRiskShellClass,
   visitedCallLowMediumDimClass,
 } from "@/lib/riskChrome";
+import { displayNumericScore } from "@/lib/eventStats";
 import { truncateForEventListExcerpt } from "@/lib/truncateListExcerpt";
 
 export default function EventsPage() {
@@ -424,7 +425,7 @@ export default function EventsPage() {
                     ].join(" ")}
                   >
                     <div className="flex shrink-0 items-center justify-start sm:h-full sm:min-h-0">
-                      <ScoreRing riskScore={e.risk_score} riskLevel={e.risk_level} />
+                      <ScoreRing riskScore={displayNumericScore(e)} riskLevel={e.risk_level} />
                     </div>
                     <div className="flex min-h-0 min-w-0 flex-col overflow-hidden sm:h-full sm:min-h-0">
                       <div className="flex min-h-0 min-w-0 shrink-0 flex-wrap items-center gap-1.5 sm:min-h-9 sm:flex-nowrap sm:overflow-x-auto sm:[-ms-overflow-style:none] sm:[scrollbar-width:none] sm:[&::-webkit-scrollbar]:hidden">

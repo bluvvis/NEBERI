@@ -58,7 +58,7 @@ export function HeaderMoreMenu() {
       </div>
 
       <div className="invisible absolute right-0 top-full z-[100] -mt-1 pt-2 opacity-0 transition-opacity duration-150 group-hover/more:visible group-hover/more:opacity-100">
-        <div className="min-w-[min(100vw-1.5rem,18rem)] overflow-visible rounded-xl bg-brand-card px-1 py-1.5 shadow-xl dark:bg-brand-panel dark:shadow-black/45 sm:min-w-[14rem]">
+        <div className="min-w-[min(100vw-1.5rem,18rem)] overflow-visible rounded-xl bg-brand-card px-1 pb-2 pt-1.5 shadow-xl dark:bg-brand-panel dark:shadow-black/45 sm:min-w-[14rem]">
           <Link to="/about" className={headerMoreMenuRowClass}>
             <IconDoc className={headerMoreMenuIconClass} />
             О продукте
@@ -75,10 +75,11 @@ export function HeaderMoreMenu() {
               <span>Войти</span>
             </Link>
           )}
+          <div className="mx-5 mt-1 h-px shrink-0 bg-brand-line/55 dark:bg-brand-surface/12" aria-hidden />
           <button
             type="button"
             onClick={() => toggleTheme()}
-            className={`${headerMoreMenuRowClass} mt-0.5 border-t border-brand-line/50 pt-0.5 dark:border-brand-panel-border/60`}
+            className="flex min-h-[2.75rem] w-full items-center gap-3 rounded-lg px-3 pb-0.5 pt-2 text-left text-sm font-medium leading-snug text-brand-ink transition-colors hover:bg-brand-surface/90 dark:text-brand-surface dark:hover:bg-brand-ink/80"
           >
             {isDark ? <IconSun className={headerMoreMenuIconClass} /> : <IconMoon className={headerMoreMenuIconClass} />}
             {isDark ? "Светлая тема" : "Тёмная тема"}
