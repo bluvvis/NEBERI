@@ -1,30 +1,63 @@
 # NeBeri
 
-Лента событий мошенничества (API + Web + Postgres). Локально: `docker compose up --build`.
+Скоринг событий связи (SMS / звонок / текст): правила из YAML + опционально ML по тексту. REST API, Postgres, SPA-консоль.
 
-Репозиторий GitHub: [bluvvis/NEBERI](https://github.com/bluvvis/NEBERI).
+**Репозиторий:** [github.com/bluvvis/NEBERI](https://github.com/bluvvis/NEBERI)
 
-## Залить код на GitHub (один раз)
+---
 
-В этой папке уже выполнены `git init` и первый коммит. Осталось отправить ветку **`main`** (нужна авторизация GitHub):
+## Структура
 
-```powershell
-cd $HOME\Desktop\NeBeri
-# если origin ещё не добавлен:
-git remote add origin https://github.com/bluvvis/NEBERI.git
-# если уже есть: git remote set-url origin https://github.com/bluvvis/NEBERI.git
+| Путь | Назначение |
+|------|------------|
+| `apps/api` | FastAPI, политики, модели, тесты (`pytest`) |
+| `apps/web` | React (Vite), Tailwind |
+| `deploy/helm/neberi` | Helm-чарт |
+| `deploy/scripts` | Скрипты деплоя (PowerShell) |
+| `research` | Данные и скрипты обучения / экспорт в `apps/api/ml_models` |
 
-git push -u origin main
+Тяжёлый embed-артефакт (`fraud_text_embed_pipeline.joblib`) в git не входит — см. `.gitignore`.
+
+---
+
+## Локально (Docker)
+
+```bash
+docker compose up --build
 ```
 
-Если `git push` зависает или просит пароль: используйте [Personal Access Token](https://github.com/settings/tokens) (scope **repo**) как пароль, или выполните `gh auth login`, затем снова `git push`.
+| Сервис | URL |
+|--------|-----|
+| Веб | http://localhost:8080 |
+| API | http://localhost:8000 |
+| Swagger | http://localhost:8000/docs (через nginx с фронта: `/docs`) |
 
-После успешного push в Actions запустится workflow **Build and push images** и опубликует **`ghcr.io/bluvvis/neberi-api:latest`** и **`ghcr.io/bluvvis/neberi-web:latest`**.
+Заголовок `X-API-Key` для ingest / симуляции в compose совпадает с `VITE_INGEST_API_KEY` при сборке web (`neberi-dev-docker-ingest`).
 
-## Деплой в Kubernetes (команда 11)
+---
 
-1. Дождитесь зелёного workflow **Build and push images** на GitHub.
-2. В [Packages пользователя bluvvis](https://github.com/bluvvis?tab=packages) откройте каждый пакет **neberi-api** / **neberi-web** → **Package settings** → **Change visibility** → **Public** (иначе кластер не сможет сделать `docker pull` без секрета).
-3. Локально: `.\deploy\scripts\Deploy-Team11.ps1` (нужен файл `deploy/kubeconfig-team-11.yaml` рядом с репо, он в `.gitignore`).
+## Разработка без Docker
 
-Подробности: [`deploy/KUBERNETES.md`](deploy/KUBERNETES.md).
+**API:** из `apps/api` — зависимости, переменная `DATABASE_URL`, `uvicorn app.main:app --reload`.
+
+**Web:** из `apps/web` — `npm install`, `npm run dev` (порт 5173). В `vite.config` прокси на `:8000` для `/v1`, `/docs`. При необходимости задайте `VITE_INGEST_API_KEY` и `VITE_API_BASE` (см. `.env.example` в web).
+
+---
+
+## CI и образы
+
+На push в `main` — workflow **Build and push images** → `ghcr.io/<owner>/neberi-api` и `neberi-web` (`:latest`).
+
+Для pull из кластера без `imagePullSecrets` пакеты GHCR должны быть **public** (настройки пакета на GitHub).
+
+---
+
+## Kubernetes
+
+Нужен свой `deploy/kubeconfig-team-11.yaml` (в `.gitignore`).
+
+```powershell
+.\deploy\scripts\Deploy-Team11.ps1
+```
+
+Подробности и ingress: [`deploy/KUBERNETES.md`](deploy/KUBERNETES.md).
