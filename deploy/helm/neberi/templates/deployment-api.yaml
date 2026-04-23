@@ -7,6 +7,9 @@ metadata:
     app.kubernetes.io/component: api
 spec:
   replicas: {{ .Values.api.replicaCount }}
+  # При квоте namespace (например limits.cpu=2) RollingUpdate держит старый + новый pod и ломает rollout.
+  strategy:
+    type: Recreate
   selector:
     matchLabels:
       app.kubernetes.io/name: {{ include "neberi.name" . }}
