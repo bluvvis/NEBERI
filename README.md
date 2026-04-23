@@ -62,4 +62,6 @@ docker compose up --build
 
 Образы с GHCR по тегу `latest` подтягиваются с **`imagePullPolicy: Always`** (см. `values-images-ghcr.yaml`), иначе после CI на ноде часто остаётся старая сборка.
 
+**Публичный стенд (team 11):** [http://neberi-t11.213-165-209-28.nip.io/](http://neberi-t11.213-165-209-28.nip.io/) — хост задаётся в [`deploy/helm/neberi/values-public.yaml`](deploy/helm/neberi/values-public.yaml) (`ingress.host`). Если у ноды сменился **белый IP**, обновите slug в имени по [nip.io](https://nip.io) и снова выполните `Deploy-Team11.ps1`.
+
 Подробности и ingress: [`deploy/KUBERNETES.md`](deploy/KUBERNETES.md).
