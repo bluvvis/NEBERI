@@ -1,0 +1,83 @@
+# Настройте CI/CD переменные в GitLab: REGISTRY, KUBE_CONTEXT, KUBE_NAMESPACE (см. README).
+variables:
+  DOCKER_TLS_CERTDIR: ""
+  IMAGE_API: $CI_REGISTRY_IMAGE/api
+  IMAGE_WEB: $CI_REGISTRY_IMAGE/web
+
+stages:
+  - test
+  - build
+  - deploy
+
+test:api:
+  stage: test
+  image: python:3.12-slim
+  script:
+    - pip install -r apps/api/requirements.txt
+    - cd apps/api && python -m pytest -q
+  rules:
+    - if: $CI_PIPELINE_SOURCE == "merge_request_event"
+    - if: $CI_COMMIT_BRANCH
+
+test:web:
+  stage: test
+  image: node:22-alpine
+  script:
+    - cd apps/web && npm install && npm run test
+  rules:
+    - if: $CI_PIPELINE_SOURCE == "merge_request_event"
+    - if: $CI_COMMIT_BRANCH
+
+test:research:
+  stage: test
+  image: python:3.12-slim
+  script:
+    - pip install --no-cache-dir -r research/requirements.txt
+    - python research/validate_dataset.py
+    - python research/offline_baseline.py
+  rules:
+    - if: $CI_PIPELINE_SOURCE == "merge_request_event"
+    - if: $CI_COMMIT_BRANCH
+
+build:api:
+  stage: build
+  image: docker:27-cli
+  services:
+    - docker:27-dind
+  before_script:
+    - docker login -u "$CI_REGISTRY_USER" -p "$CI_REGISTRY_PASSWORD" "$CI_REGISTRY"
+  script:
+    - docker build -t "$IMAGE_API:$CI_COMMIT_SHORT_SHA" -t "$IMAGE_API:latest" apps/api
+    - docker push "$IMAGE_API:$CI_COMMIT_SHORT_SHA"
+    - docker push "$IMAGE_API:latest"
+  rules:
+    - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH
+
+build:web:
+  stage: build
+  image: docker:27-cli
+  services:
+    - docker:27-dind
+  before_script:
+    - docker login -u "$CI_REGISTRY_USER" -p "$CI_REGISTRY_PASSWORD" "$CI_REGISTRY"
+  script:
+    - docker build -f apps/web/Dockerfile.static -t "$IMAGE_WEB:$CI_COMMIT_SHORT_SHA" -t "$IMAGE_WEB:latest" apps/web
+    - docker push "$IMAGE_WEB:$CI_COMMIT_SHORT_SHA"
+    - docker push "$IMAGE_WEB:latest"
+  rules:
+    - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH
+
+deploy:helm:
+  stage: deploy
+  image: dtzar/helm-kubectl:3.15.4
+  script:
+    - |
+      helm upgrade --install neberi ./deploy/helm/neberi \
+        --namespace "${KUBE_NAMESPACE:-default}" \
+        --set api.image.repository="$IMAGE_API" \
+        --set api.image.tag="$CI_COMMIT_SHORT_SHA" \
+        --set web.image.repository="$IMAGE_WEB" \
+        --set web.image.tag="$CI_COMMIT_SHORT_SHA"
+  rules:
+    - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH
+      when: manual

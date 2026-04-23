@@ -1,0 +1,16 @@
+# This template defines the Service resource.
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "my-fastapi-app.fullname" . }}  # Name of the service
+  labels:
+    app: {{ include "my-fastapi-app.name" . }}  # Labels for the service
+spec:
+  type: {{ .Values.service.type }}
+  selector:
+    app: {{ include "my-fastapi-app.name" . }}  # Selects pods with this label
+  ports:
+    - port: {{ .Values.service.port }}  # Port the service exposes
+      targetPort: {{ .Values.service.port }}  # Port the pods are listening on
+      protocol: TCP

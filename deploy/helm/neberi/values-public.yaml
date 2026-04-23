@@ -1,0 +1,22 @@
+# Публичный доступ без своего DNS: https://nip.io — имя вида prefix.IP-AS-SLUG.nip.io резолвится в IP.
+# 1) Узнайте публичный IP ноды, где открыт ingress (часто тот же, что у API кластера, без порта :16443).
+# 2) Переведите IP в slug: 213.165.209.28 → 213-165-209-28
+# 3) Подставьте ниже в ingress.host и выполните helm с -f values.yaml -f values-public.yaml
+#
+# Образы neberi/api и neberi/web должны быть в registry, доступном нодам, или загружены на ноду (см. KUBERNETES.md).
+
+fullnameOverride: neberi
+
+# Совпадает со сборкой web (docker-compose build args) — иначе симуляция/ingest в UI вернут 401.
+api:
+  ingestApiKey: "neberi-dev-docker-ingest"
+
+postgres:
+  persistence:
+    enabled: false
+
+ingress:
+  enabled: true
+  # В кластере microk8s default IngressClass — public (hostPort 80/443 на ноде)
+  className: public
+  host: neberi-t11.213-165-209-28.nip.io

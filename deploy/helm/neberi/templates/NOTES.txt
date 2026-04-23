@@ -1,0 +1,20 @@
+Установлен релиз {{ .Release.Name }} в namespace {{ .Release.Namespace }}.
+
+{{- if .Values.ingress.enabled }}
+Публичный URL (после того как Ingress получит маршрут и образы подтянутся на ноды):
+  http://{{ .Values.ingress.host }}/
+
+{{- if not .Values.postgres.persistence.enabled }}
+Внимание: Postgres на emptyDir — данные БД пропадут при удалении пода.
+{{- end }}
+{{- else }}
+Ingress отключён — настройте values.ingress.enabled и host.
+{{- end }}
+
+Образы по умолчанию: {{ .Values.api.image.repository }}:{{ .Values.api.image.tag }} и {{ .Values.web.image.repository }}:{{ .Values.web.image.tag }}.
+Если поды в ImagePullBackOff — соберите и опубликуйте образы (GitHub Actions «Build and push images» в ghcr.io), затем:
+  helm upgrade {{ .Release.Name }} . -n {{ .Release.Namespace }} -f values.yaml -f values-public.yaml ^
+    --set api.image.repository=ghcr.io/<ваш-login>/neberi-api --set api.image.tag=latest ^
+    --set web.image.repository=ghcr.io/<ваш-login>/neberi-web --set web.image.tag=latest
+
+или: .\deploy\scripts\Deploy-Team11.ps1 -GhcrOwner "<ваш-login-github>"

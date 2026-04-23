@@ -1,0 +1,20 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "neberi.fullname" . }}-api
+  labels:
+    {{- include "neberi.labels" . | nindent 4 }}
+    app.kubernetes.io/component: api
+  {{- with .Values.api.serviceAnnotations }}
+  annotations:
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
+spec:
+  type: ClusterIP
+  selector:
+    app.kubernetes.io/name: {{ include "neberi.name" . }}
+    app.kubernetes.io/component: api
+  ports:
+    - name: http
+      port: 8000
+      targetPort: http

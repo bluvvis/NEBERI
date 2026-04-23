@@ -1,0 +1,6 @@
+# Локально под GPU (см. train_export_multilingual_gpu.py). В Docker-образ API не тащим.
+# PyTorch с CUDA под Windows: https://pytorch.org/get-started/locally/
+sentence-transformers>=3.0.0
+scikit-learn>=1.4.0
+pandas>=2.2.0
+joblib>=1.3.0

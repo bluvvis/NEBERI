@@ -1,0 +1,26 @@
+# Instructions:
+# 1. Each team deploys their own Ingress within their own namespace
+#    updating the namespace, ingress name, path, and service details accordingly.
+# 2. This setup uses path-based routing, since no domain is provided.
+# 3. The Ingress controller manages the routing for team-specific traffic.
+
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: team-...-ingress
+  annotations:
+    # Example annotation for NGINX Ingress controller to rewrite the URL path if necessary.
+    nginx.ingress.kubernetes.io/rewrite-target: /$1
+spec:
+  ingressClassName: public
+  rules:
+    - http:
+        paths:
+          - path: /team-.../(.*)
+            pathType: ImplementationSpecific
+            backend:
+              service:
+                name: ...
+                port:
+                  number: ...
+

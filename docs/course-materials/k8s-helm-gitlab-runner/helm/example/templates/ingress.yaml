@@ -1,0 +1,28 @@
+{{- if .Values.ingress.enabled }}  # Checks if ingress is enabled
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: {{ include "my-fastapi-app.fullname" . }}  # Name of the ingress
+  annotations:
+{{ toYaml .Values.ingress.annotations | indent 4 }}  # Includes annotations from values.yaml
+spec:
+  ingressClassName: {{ .Values.ingress.className }}  # Ingress class name
+  rules:
+  {{- range .Values.ingress.hosts }}  # Iterates over the hosts
+    - host: {{ .host | default " " }}  # Host for the ingress rule
+      http:
+        paths:
+        {{- range .paths }}  # Iterates over the paths
+          - path: {{ .path }}  # Path for the ingress rule
+            pathType: {{ .pathType }}  # Path matching type
+            backend:
+              service:
+                name: {{ include "my-fastapi-app.fullname" $ }}  # Service to route to
+                port:
+                  # In the context of for example a range loop, $ keeps the top-level value,
+                  # even if . changes $ should always be the top-level Helm value.
+                  # https://stackoverflow.com/questions/76942425/difference-between-values-and-values-in-helm
+                  number: {{ $.Values.service.port }}  # Port on the service
+        {{- end }}
+  {{- end }}
+{{- end }}

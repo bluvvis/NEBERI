@@ -1,0 +1,9 @@
+{
+  "model_version": "minilm-multilingual-lr-2026.04.5",
+  "dataset": "uci-sms-spam-collection-en",
+  "embedding_model": "paraphrase-multilingual-MiniLM-L12-v2",
+  "trained_at": "2026-04-22T01:43:15.958813+00:00",
+  "n_samples": 5574,
+  "holdout_roc_auc": 0.9982839356927481,
+  "artifact": "fraud_text_embed_pipeline.joblib"
+}

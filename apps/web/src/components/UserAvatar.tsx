@@ -1,0 +1,69 @@
+import { useEffect, useState } from "react";
+
+type Props = {
+  /** Если нет — показываем нейтральную заглушку (серый силуэт на белом). */
+  src?: string | null;
+  alt: string;
+  size?: "sm" | "md" | "lg";
+};
+
+const sizeClass: Record<NonNullable<Props["size"]>, string> = {
+  sm: "h-9 w-9 min-h-9 min-w-9",
+  md: "h-12 w-12 min-h-12 min-w-12",
+  lg: "h-24 w-24 min-h-24 min-w-24",
+};
+
+function PlaceholderPerson({ className }: { className?: string }) {
+  return (
+    <svg className={className} viewBox="0 0 24 24" fill="none" aria-hidden>
+      <path
+        fill="currentColor"
+        fillOpacity={0.35}
+        d="M12 12a3.75 3.75 0 1 0 0-7.5 3.75 3.75 0 0 0 0 7.5Zm-5.25 9.75a5.25 5.25 0 0 1 10.5 0v.75H6.75v-.75Z"
+      />
+    </svg>
+  );
+}
+
+/** Круглая аватарка (object-cover), единый стиль для профиля и меню. */
+export function UserAvatar({ src, alt, size = "md" }: Props) {
+  const hasSrc = Boolean(src && src.trim() !== "");
+  const [imgBroken, setImgBroken] = useState(false);
+
+  useEffect(() => {
+    setImgBroken(false);
+  }, [src]);
+
+  const showPhoto = hasSrc && !imgBroken;
+
+  return (
+    <div
+      className={[
+        "shrink-0 overflow-hidden rounded-full border-2 border-brand-line shadow-inner dark:border-brand-panel-border",
+        sizeClass[size],
+      ].join(" ")}
+    >
+      {showPhoto ? (
+        <img
+          key={src}
+          src={src!}
+          alt={alt}
+          className="h-full w-full object-cover bg-brand-surface dark:bg-brand-ink"
+          width={256}
+          height={256}
+          decoding="async"
+          referrerPolicy="no-referrer"
+          onError={() => setImgBroken(true)}
+        />
+      ) : (
+        <div
+          className="flex h-full w-full items-center justify-center bg-white"
+          role="img"
+          aria-label={alt || "Аватар не задан"}
+        >
+          <PlaceholderPerson className={size === "lg" ? "h-14 w-14 text-neutral-400" : "h-[55%] w-[55%] text-neutral-400"} />
+        </div>
+      )}
+    </div>
+  );
+}

@@ -1,0 +1,54 @@
+services:
+  postgres:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_USER: neberi
+      POSTGRES_PASSWORD: neberi
+      POSTGRES_DB: neberi
+    ports:
+      - "5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U neberi"]
+      interval: 3s
+      timeout: 3s
+      retries: 10
+
+  api:
+    build:
+      context: ./apps/api
+      dockerfile: Dockerfile
+    environment:
+      DATABASE_URL: postgresql+psycopg2://neberi:neberi@postgres:5432/neberi
+      POLICY_PATH: /app/policies/default_rules.yaml
+      ML_PIPELINE_PATH: /app/ml_models/fraud_text_pipeline.joblib
+      ML_BLEND_WEIGHT: "0.42"
+      # Общий ключ: симуляция, отзывы, репутация (тот же текст в build.args web → VITE_INGEST_API_KEY).
+      # Чтобы API принимал запросы без заголовка — закомментируйте строку ниже и пересоберите web без args.
+      INGEST_API_KEY: "neberi-dev-docker-ingest"
+      # CORS_ALLOW_ORIGINS: "http://localhost:5173,http://localhost:8080"
+    volumes:
+      - ./apps/api/policies:/app/policies:ro
+      # Свежий joblib/manifest после train_export без пересборки образа
+      - ./apps/api/ml_models:/app/ml_models:ro
+    ports:
+      - "8000:8000"
+    depends_on:
+      postgres:
+        condition: service_healthy
+
+  web:
+    build:
+      context: ./apps/web
+      dockerfile: Dockerfile
+      args:
+        VITE_INGEST_API_KEY: "neberi-dev-docker-ingest"
+        VITE_API_BASE: ""
+    ports:
+      - "8080:80"
+    depends_on:
+      - api
+
+volumes:
+  pgdata:

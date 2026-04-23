@@ -1,0 +1,10 @@
+# Образы после успешного GitHub Actions «Build and push images» для org/user bluvvis.
+# Пакеты в GHCR сделайте Public: https://github.com/bluvvis?tab=packages
+api:
+  image:
+    repository: ghcr.io/bluvvis/neberi-api
+    tag: latest
+web:
+  image:
+    repository: ghcr.io/bluvvis/neberi-web
+    tag: latest

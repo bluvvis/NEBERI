@@ -1,0 +1,35 @@
+# This file contains the default values for the chart's templates.
+# Users can override these values when installing the chart.
+
+replicaCount: ...  # Number of replicas of the Deployment
+
+image:
+  repository: ...  # The Docker image repository
+  pullPolicy: ...  # Image pull policy (Always, IfNotPresent, Never)
+  tag: "..."  # The image tag to pull
+
+nameOverride: ""  # Option to override the name of the chart
+fullnameOverride: ""  # Option to override the full name
+
+service:
+  type: ...  # Type of service (ClusterIP, NodePort, LoadBalancer)
+  port: ...  # The port that the service will expose
+
+ingress:
+  enabled: ...  # Enable or disable the Ingress resource
+  className: public  # The ingress class name (e.g., nginx)
+  annotations:
+    nginx.ingress.kubernetes.io/rewrite-target: /$1  # Example annotation
+  hosts:
+    - host: ""  # The host name (can be left empty or specified)
+      paths:
+        - path: /team-.../(.*)  # The path to route traffic
+          pathType: ...  # Path matching algorithm
+
+resources:
+  limits:
+    cpu: ...
+    memory: ...
+  requests:
+    cpu: ...
+    memory: ...

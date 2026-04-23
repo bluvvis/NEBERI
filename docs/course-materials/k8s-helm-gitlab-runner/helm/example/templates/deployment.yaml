@@ -1,0 +1,45 @@
+# This template defines the Deployment resource.
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "my-fastapi-app.fullname" . }}  # Generates a name using a helper function (_helpers.tpl)
+  labels:
+    app: {{ include "my-fastapi-app.name" . }}  # Labels help identify and select resources
+spec:
+  replicas: {{ .Values.replicaCount }}
+  selector:
+    matchLabels:
+      app: {{ include "my-fastapi-app.name" . }}  # Selector matches pods with this label
+  template:
+    metadata:
+      labels:
+        app: {{ include "my-fastapi-app.name" . }}  # Labels for the pods
+      annotations:
+        example.com/annotation: "This pod is part of a FastAPI deployment demo"
+    spec:
+      containers:
+      - name: {{ include "my-fastapi-app.name" . }}
+        image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+        imagePullPolicy: {{ .Values.image.pullPolicy }}
+        resources:
+          limits:
+            cpu: {{ .Values.resources.limits.cpu }}
+            memory: {{ .Values.resources.limits.memory }}
+          requests:
+            cpu: {{ .Values.resources.requests.cpu }}
+            memory: {{ .Values.resources.requests.memory }}
+        ports:
+        - containerPort: {{ .Values.service.port }}
+        readinessProbe:
+          httpGet:
+            path: /healthcheck
+            port: {{ .Values.service.port }}
+          initialDelaySeconds: 10
+          periodSeconds: 5
+        livenessProbe:
+          httpGet:
+            path: /healthcheck
+            port: {{ .Values.service.port }}
+          initialDelaySeconds: 15
+          periodSeconds: 20

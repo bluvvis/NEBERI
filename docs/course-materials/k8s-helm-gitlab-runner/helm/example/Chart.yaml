@@ -1,0 +1,8 @@
+# This file contains metadata about the chart.
+
+apiVersion: v2  # Specifies the chart API version (v2 is for Helm 3)
+name: ...  # The name of the chart
+description: A Helm chart for deploying a my application
+type: application  # The type of the chart (application or library)
+version: 0.1.0  # The version of this chart (increment when releasing new versions)
+appVersion: "1.0"  # The version of the app being packaged

@@ -1,0 +1,89 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "neberi.fullname" . }}-api
+  labels:
+    {{- include "neberi.labels" . | nindent 4 }}
+    app.kubernetes.io/component: api
+spec:
+  replicas: {{ .Values.api.replicaCount }}
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: {{ include "neberi.name" . }}
+      app.kubernetes.io/component: api
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: {{ include "neberi.name" . }}
+        app.kubernetes.io/component: api
+    spec:
+      initContainers:
+        - name: wait-for-pg
+          image: {{ .Values.postgres.image }}
+          env:
+            - name: PGPASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: {{ include "neberi.fullname" . }}-postgres
+                  key: password
+          command:
+            - sh
+            - -c
+            - |
+              until pg_isready -h {{ include "neberi.fullname" . }}-postgres -U {{ .Values.postgres.user }}; do
+                echo waiting for postgres; sleep 2;
+              done
+          resources:
+            requests:
+              cpu: 20m
+              memory: 64Mi
+            limits:
+              cpu: 200m
+              memory: 128Mi
+      containers:
+        - name: api
+          image: "{{ .Values.api.image.repository }}:{{ .Values.api.image.tag }}"
+          imagePullPolicy: {{ .Values.api.image.pullPolicy }}
+          ports:
+            - containerPort: 8000
+              name: http
+          env:
+            - name: DATABASE_URL
+              valueFrom:
+                secretKeyRef:
+                  name: {{ include "neberi.fullname" . }}-postgres
+                  key: DATABASE_URL
+            - name: POLICY_PATH
+              value: "/app/policies/default_rules.yaml"
+            - name: ML_PIPELINE_PATH
+              value: {{ .Values.api.mlPipelinePath | quote }}
+            - name: ML_BLEND_WEIGHT
+              value: {{ .Values.api.mlBlendWeight | quote }}
+            {{- if .Values.api.ingestApiKey }}
+            - name: INGEST_API_KEY
+              value: {{ .Values.api.ingestApiKey | quote }}
+            {{- end }}
+            - name: CORS_ALLOW_ORIGINS
+              value: {{ .Values.api.corsAllowOrigins | quote }}
+          volumeMounts:
+            - name: policy
+              mountPath: /app/policies
+              readOnly: true
+          readinessProbe:
+            httpGet:
+              path: /healthcheck
+              port: http
+            initialDelaySeconds: 5
+            periodSeconds: 5
+          livenessProbe:
+            httpGet:
+              path: /healthcheck
+              port: http
+            initialDelaySeconds: 15
+            periodSeconds: 20
+          resources:
+            {{- toYaml .Values.api.resources | nindent 12 }}
+      volumes:
+        - name: policy
+          configMap:
+            name: {{ include "neberi.fullname" . }}-policy

@@ -1,0 +1,60 @@
+global:
+  imageRegistry: ""
+
+nameOverride: ""
+fullnameOverride: ""
+
+api:
+  mlPipelinePath: "/app/ml_models/fraud_text_pipeline.joblib"
+  mlBlendWeight: "0.42"
+  # Непустой ключ → POST /v1/events и purge только с X-API-Key
+  ingestApiKey: ""
+  # Через запятую или "*"
+  corsAllowOrigins: "*"
+  serviceAnnotations:
+    prometheus.io/scrape: "true"
+    prometheus.io/port: "8000"
+    prometheus.io/path: "/metrics"
+  image:
+    repository: neberi/api
+    tag: "latest"
+    pullPolicy: IfNotPresent
+  replicaCount: 1
+  resources:
+    requests:
+      cpu: 100m
+      memory: 256Mi
+    limits:
+      cpu: 500m
+      memory: 512Mi
+
+web:
+  image:
+    repository: neberi/web
+    tag: "latest"
+    pullPolicy: IfNotPresent
+  replicaCount: 1
+  resources:
+    requests:
+      cpu: 50m
+      memory: 64Mi
+    limits:
+      cpu: 200m
+      memory: 128Mi
+
+postgres:
+  image: postgres:16-alpine
+  storage: 1Gi
+  user: neberi
+  database: neberi
+  password: "neberi-dev-change-me"
+  # Если в namespace нет StorageClass — выставьте false (emptyDir, данные теряются при удалении пода).
+  persistence:
+    enabled: true
+
+ingress:
+  enabled: true
+  # В учебном microk8s обычно нужен класс public (см. values-public.yaml).
+  className: nginx
+  host: neberi.local
+  annotations: {}

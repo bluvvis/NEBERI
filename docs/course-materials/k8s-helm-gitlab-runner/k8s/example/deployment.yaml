@@ -1,0 +1,71 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  # Name of the deployment
+  name: ...
+  # Deployment labels
+  # These labels are attached to the Deployment’s metadata and help 
+  # identify the Deployment resource. They are for organizational purposes 
+  # and can be used by tools and dashboards.
+  labels:
+    app: ...
+    # Can be others, for ex:
+    # environment: production
+    # tier: backend
+spec:
+  # Number of pod instances for load balancing and high-availability
+  replicas: ...
+  # Selector labels
+  # These labels determine which pods are managed by this Deployment. 
+  # The Deployment uses these matchLabels to filter pods during updates and rollouts.
+  selector:
+    matchLabels:
+      app: ...
+  # Pod template that describes the pods the deployment will create.
+  template:
+    metadata:
+      # Template pod labels
+      # These labels are applied to every pod that the Deployment creates. 
+      # They must match the selector labels so that the Deployment can correctly identify its pods.
+      labels:
+        app: ...
+      # Annotations can be used to attach arbitrary metadata (not used for selection)
+      annotations:
+        example.com/annotation: ...
+    spec:
+      containers:
+      - name: ...  # Container name within the pod
+        image: ...  # Container image to be pulled from the repository
+        # Container resource requests and limits to control resource allocation
+        # https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/
+        resources:
+          requests:
+            cpu: "100m"
+            memory: "512Mi"
+          limits:
+            cpu: "500m"
+            memory: "1024Mi"
+        # The cluster has quotas for Service Accouts (actual for 04.04.2025)
+        # requests.cpu: "1000m"
+        # requests.memory: "2048Mi"
+        # limits.cpu: "3000m"
+        # limits.memory: "2048Mi"
+
+        # Defines the container port that the application listens on.
+        ports:
+        - containerPort: ...
+        # Health checks ensure the container is operating as expected
+        readinessProbe:
+          # The readiness probe checks if the container is ready to receive traffic.
+          httpGet:
+            path: /healthcheck
+            port: ...
+          initialDelaySeconds: ...  # Delay before the first probe is initiated
+          periodSeconds: ...        # How often to perform the probe
+        livenessProbe:
+          # The liveness probe checks if the container is still running.
+          httpGet:
+            path: /healthcheck
+            port: ...
+          initialDelaySeconds: ...  # Delay before the first probe is initiated
+          periodSeconds: ...        # How often to perform the probe

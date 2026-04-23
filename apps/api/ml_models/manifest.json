@@ -1,0 +1,14 @@
+{
+  "model_version": "tfidf-lr-combined-2026.04.6",
+  "dataset": "uci-en-plus-synthetic-ru",
+  "open_data_source": "UCI SMS Spam + research/data/synthetic_sms_labelled.csv",
+  "trained_at": "2026-04-22T09:29:59.904028+00:00",
+  "n_samples": 5228,
+  "label_counts": {
+    "0": 4559,
+    "1": 669
+  },
+  "holdout_roc_auc": 0.9864084184341451,
+  "sklearn_pipeline": "TfidfVectorizer(1-2gram, max_features=50k, min_df=2) + LogisticRegression(saga, balanced)",
+  "language_note": "Смесь EN (UCI) и размеченных RU-строк: лучше TF-IDF+LR на русских smishing-формулировках, чем только UCI; без GPU."
+}

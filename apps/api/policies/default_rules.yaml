@@ -1,0 +1,111 @@
+# Версия политики дублируется в ответе API (policy_version) для аудита.
+# Поле references — открытые источники для объяснимости (см. docs/INDUSTRY_SIGNALS.md); не юридическое «доказательство».
+version: "2026.04.5"
+rules:
+  - id: coercion_urgency
+    weight: 28
+    message: "Призыв к немедленным действиям (типичный признак социальной инженерии)"
+    references:
+      - title: "Two-Factor Phishing / smishing (Springer TFC chapter)"
+        url: "https://link.springer.com/chapter/10.1007/978-981-16-9229-1_10"
+        kind: paper
+    when:
+      type: keywords
+      event_types: [sms, voice_text]
+      patterns:
+        - "срочно"
+        - "немедленно"
+        - "прямо сейчас"
+
+  - id: scam_keywords
+    weight: 28
+    message: "В тексте обнаружены типичные формулировки мошеннических сообщений"
+    references:
+      - title: "UCI SMS Spam Collection"
+        url: "https://archive.ics.uci.edu/dataset/228/sms+spam+collection"
+        kind: dataset
+      - title: "SMS phishing labelled set (Mendeley Data)"
+        url: "https://data.mendeley.com/datasets/f45bkkt8pr/1"
+        kind: dataset
+    when:
+      type: keywords
+      event_types: [sms, voice_text]
+      patterns:
+        - "код из смс"
+        - "переведите на карту"
+        - "блокировка счета"
+        - "срочно пройдите по ссылке"
+        - "служба безопасности банка"
+
+  - id: social_engineering_gray
+    weight: 18
+    message: "Формулировки «серой» социальной инженерии (подделка под банк/финансы без классических триггеров)"
+    references:
+      - title: "Two-Factor Phishing / smishing (Springer TFC chapter)"
+        url: "https://link.springer.com/chapter/10.1007/978-981-16-9229-1_10"
+        kind: paper
+    when:
+      type: keywords
+      event_types: [sms, voice_text]
+      patterns:
+        - "полные реквизиты карты"
+        - "реквизиты карты для возврата"
+        - "финансовый отдел"
+        - "ошибочного списания"
+        - "ожидает подтверждения в приложении"
+        - "линия защиты клиента"
+        - "зарезервировано списание"
+        - "код никому не называть"
+        - "служба безопасности банка просит назвать код"
+
+  - id: night_window_call
+    weight: 14
+    message: "Звонок в ночное окно (часто используется в социальной инженерии)"
+    references:
+      - title: "Smishing dataset / поведенческий контекст (arXiv HTML)"
+        url: "https://arxiv.org/html/2402.18430v2"
+        kind: paper
+    when:
+      type: night_call
+      start_hour: 0
+      end_hour: 5
+      event_types: [call]
+
+  - id: ultra_short_call
+    weight: 18
+    message: "Очень короткий звонок (возможный прозвон/сканирование)"
+    references:
+      - title: "Smishing / телеком-паттерны (arXiv HTML)"
+        url: "https://arxiv.org/html/2402.18430v2"
+        kind: paper
+    when:
+      type: short_duration
+      event_types: [call]
+      max_seconds: 3
+
+  - id: burst_short_dials
+    weight: 35
+    message: "Серия коротких вызовов на один номер за короткий интервал"
+    references:
+      - title: "UCI SMS Spam Collection (аналогия velocity / частотные сигналы)"
+        url: "https://archive.ics.uci.edu/dataset/228/sms+spam+collection"
+        kind: dataset
+    when:
+      type: burst_short_calls
+      event_types: [call]
+      window_minutes: 20
+      min_calls: 5
+      max_duration_seconds: 5
+
+  - id: high_velocity_sms
+    weight: 22
+    message: "Много исходящих SMS с одного номера за короткий интервал"
+    references:
+      - title: "SMS phishing labelled set (Mendeley Data)"
+        url: "https://data.mendeley.com/datasets/f45bkkt8pr/1"
+        kind: dataset
+    when:
+      type: burst_same_from
+      event_types: [sms]
+      window_minutes: 10
+      min_events: 8
