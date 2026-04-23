@@ -82,7 +82,14 @@ export function StatStrip({ listEvents, distributionSample, listQuerySuffix = ""
               />
               <div className="relative min-w-0">
                 <p className="text-sm font-semibold uppercase tracking-wide text-brand-muted dark:text-brand-surface/55">
-                  {c.label}
+                  {c.label === "Риск: низ / ср / выс" ? (
+                    <>
+                      <span className="max-sm:hidden">Риск: низ / ср / выс</span>
+                      <span className="sm:hidden">Риск Н·С·В</span>
+                    </>
+                  ) : (
+                    c.label
+                  )}
                 </p>
                 {i === 3 && riskHist !== null && riskHist.sampleSize > 0 ? (
                   <p className="mt-0.5 truncate text-xs font-normal normal-case text-brand-muted/80 dark:text-brand-surface/45">

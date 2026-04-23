@@ -3,12 +3,12 @@ import { HeaderMoreMenu } from "@/components/HeaderMoreMenu";
 
 const navClass = ({ isActive }: { isActive: boolean }) =>
   [
-    "relative rounded-lg px-3 py-2 text-base font-medium outline-none transition-all duration-300 ease-out",
+    "relative shrink-0 rounded-lg border px-3 py-2 text-base font-medium outline-none transition-all duration-300 ease-out",
     "focus-visible:ring-2 focus-visible:ring-brand-red/40 focus-visible:ring-offset-2 focus-visible:ring-offset-brand-card dark:focus-visible:ring-offset-brand-ink",
     "hover:scale-[1.03] active:scale-[0.98] motion-reduce:transition-colors motion-reduce:hover:scale-100 motion-reduce:active:scale-100",
     isActive
-      ? "bg-brand-red/10 text-brand-red ring-1 ring-brand-red/35 shadow-sm dark:bg-brand-red/15 dark:text-brand-surface dark:ring-brand-red/40"
-      : "text-brand-muted hover:bg-brand-line/60 hover:text-brand-ink dark:text-brand-surface/70 dark:hover:bg-brand-panel-border dark:hover:text-brand-surface",
+      ? "border-brand-red/40 bg-brand-red/10 text-brand-red shadow-sm ring-1 ring-brand-red/35 dark:border-brand-red/45 dark:bg-brand-red/15 dark:text-brand-surface dark:ring-brand-red/40"
+      : "border-brand-line/90 text-brand-muted hover:border-brand-muted hover:bg-brand-line/60 hover:text-brand-ink dark:border-brand-panel-border dark:text-brand-surface/70 dark:hover:border-brand-muted dark:hover:bg-brand-ink/80 dark:hover:text-brand-surface",
   ].join(" ");
 
 export function AppShell() {
@@ -60,21 +60,21 @@ export function AppShell() {
               </p>
             </div>
           </Link>
-          <div className="-mx-1 flex min-w-0 items-center justify-between gap-2 max-sm:pb-0.5 sm:mx-0 sm:justify-end">
+          <div className="flex min-w-0 flex-1 items-center gap-2 sm:flex-initial sm:justify-end">
             <nav
-              className="flex min-w-0 flex-1 items-center gap-1 overflow-x-auto overflow-y-visible [-ms-overflow-style:none] [scrollbar-width:none] sm:flex-none sm:gap-2 [&::-webkit-scrollbar]:hidden"
+              className="flex min-w-0 flex-1 items-center gap-1.5 overflow-x-auto [-ms-overflow-style:none] [scrollbar-width:none] sm:flex-none sm:gap-2 [&::-webkit-scrollbar]:hidden"
               aria-label="Основная навигация"
             >
-              <NavLink to="/" end className={`${navClass} max-sm:shrink-0 max-sm:whitespace-nowrap`}>
+              <NavLink to="/" end className={navClass}>
                 Лента
               </NavLink>
-              <NavLink to="/reputation" className={`${navClass} max-sm:shrink-0 max-sm:whitespace-nowrap`}>
+              <NavLink to="/reputation" className={navClass}>
                 Репутация
               </NavLink>
-              <div className="max-sm:shrink-0">
-                <HeaderMoreMenu />
-              </div>
             </nav>
+            <div className="relative z-50 shrink-0">
+              <HeaderMoreMenu />
+            </div>
           </div>
         </div>
       </header>

@@ -66,7 +66,7 @@ export function HeaderMoreMenu() {
 
       <div
         className={[
-          "invisible absolute right-0 top-full z-50 min-w-[14rem] pt-1 opacity-0 transition-opacity duration-150",
+          "invisible absolute right-0 top-full z-[100] min-w-[14rem] pt-1 opacity-0 transition-opacity duration-150",
           "group-hover/more:visible group-hover/more:opacity-100",
           "group-focus-within/more:visible group-focus-within/more:opacity-100",
         ].join(" ")}

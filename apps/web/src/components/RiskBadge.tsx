@@ -10,9 +10,12 @@ const styles: Record<RiskLevel, string> = {
 
 export function RiskBadge({ level }: { level: RiskLevel }) {
   const label = level === "low" ? "Низкий" : level === "medium" ? "Средний" : "Высокий";
+  const short = level === "low" ? "Н" : level === "medium" ? "С" : "В";
   return (
     <span
-      className={`relative inline-flex items-center overflow-hidden rounded-full px-3 py-1 text-sm font-semibold ring-inset ${styles[level]}`}
+      title={label}
+      aria-label={label}
+      className={`relative inline-flex items-center overflow-hidden rounded-full px-2.5 py-1 text-sm font-semibold ring-inset max-sm:px-2 max-sm:text-xs sm:px-3 sm:text-sm ${styles[level]}`}
     >
       {level === "high" ? (
         <span
@@ -20,7 +23,8 @@ export function RiskBadge({ level }: { level: RiskLevel }) {
           aria-hidden
         />
       ) : null}
-      <span className="relative">{label}</span>
+      <span className="relative max-sm:hidden">{label}</span>
+      <span className="relative sm:hidden">{short}</span>
     </span>
   );
 }

@@ -323,7 +323,7 @@ export default function EventsPage() {
 
       <StatStrip listEvents={listData} distributionSample={distributionForStrip} listQuerySuffix={eventListQuerySuffix} />
 
-      <div className="overflow-hidden rounded-2xl border border-brand-line bg-brand-card shadow-panel-light dark:border-brand-panel-border dark:bg-brand-panel dark:shadow-panel">
+      <div className="rounded-2xl border border-brand-line bg-brand-card shadow-panel-light dark:border-brand-panel-border dark:bg-brand-panel dark:shadow-panel">
         <div className="flex flex-col gap-4 border-b border-brand-line px-3 py-3 dark:border-brand-panel-border sm:px-4 sm:py-4 lg:flex-row lg:items-center lg:justify-between">
           <h2 className="text-base font-bold text-brand-ink dark:text-brand-surface">Последние события</h2>
           <div className="flex flex-col gap-3 sm:flex-row sm:flex-wrap sm:items-center sm:justify-end lg:gap-5">
@@ -423,24 +423,25 @@ export default function EventsPage() {
                       <ScoreRing riskScore={e.risk_score} riskLevel={e.risk_level} />
                     </div>
                     <div className="flex min-h-0 min-w-0 flex-col overflow-hidden sm:h-full sm:min-h-0">
-                      <div className="flex min-h-9 shrink-0 flex-nowrap items-center gap-1.5 overflow-x-auto [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+                      <div className="flex min-h-0 min-w-0 shrink-0 flex-wrap items-center gap-1.5 sm:min-h-9 sm:flex-nowrap sm:overflow-x-auto sm:[-ms-overflow-style:none] sm:[scrollbar-width:none] sm:[&::-webkit-scrollbar]:hidden">
                         <span className="shrink-0 rounded-md border border-brand-line bg-brand-surface px-2 py-0.5 font-mono text-xs tabular-nums text-brand-muted dark:border-brand-panel-border dark:bg-brand-ink dark:text-brand-surface/70">
                           {e.event_type}
                         </span>
                         <RiskBadge level={e.risk_level} />
-                        <span className="shrink-0 font-mono text-xs tabular-nums text-brand-muted dark:text-brand-surface/50">
+                        <span className="hidden shrink-0 font-mono text-xs tabular-nums text-brand-muted dark:text-brand-surface/50 sm:inline">
                           v{e.policy_version}
                         </span>
                         {e.ml_fraud_proba != null && (
                           <span
                             title="Вероятность «мошеннический текст» по модели (0–100%)"
-                            className={`shrink-0 rounded-md border px-2 py-0.5 text-xs font-semibold uppercase tracking-wide ${
+                            className={`shrink-0 rounded-md border px-2 py-0.5 text-xs font-semibold uppercase tracking-wide max-sm:normal-case ${
                               e.ml_fraud_proba >= 0.45
                                 ? "border-brand-red/40 bg-brand-red/10 text-brand-red dark:border-brand-red/50 dark:bg-brand-red/15 dark:text-brand-surface"
                                 : "border-brand-line bg-brand-surface text-brand-muted dark:border-brand-panel-border dark:bg-brand-ink dark:text-brand-surface/60"
                             }`}
                           >
-                            ML {(e.ml_fraud_proba * 100).toFixed(1)}%
+                            <span className="max-sm:hidden">ML </span>
+                            {(e.ml_fraud_proba * 100).toFixed(1)}%
                           </span>
                         )}
                         {e.caller_reputation && (
@@ -450,14 +451,21 @@ export default function EventsPage() {
                                 ? "Номер в блок-листе репутации (вес в сумме правил)"
                                 : "Номер в списке доверенных (вес в сумме правил)"
                             }
-                            className={`shrink-0 rounded-md border px-2 py-0.5 text-xs font-semibold uppercase tracking-wide ${
+                            className={`max-w-full shrink-0 rounded-md border px-2 py-0.5 text-xs font-semibold uppercase tracking-wide max-sm:px-1.5 max-sm:text-[0.65rem] ${
                               e.caller_reputation.list_type === "blocklist"
                                 ? "border-brand-red/40 bg-brand-red/10 text-brand-red dark:border-brand-red/50 dark:bg-brand-red/15 dark:text-brand-surface"
                                 : "border-emerald-500/40 bg-emerald-500/10 text-emerald-700 dark:border-emerald-400/45 dark:bg-emerald-500/15 dark:text-emerald-200"
                             }`}
                           >
-                            Реп {e.caller_reputation.list_type === "blocklist" ? "блок" : "доверие"}{" "}
-                            <span className="font-mono tabular-nums normal-case">
+                            <span className="max-sm:hidden">
+                              Реп {e.caller_reputation.list_type === "blocklist" ? "блок" : "доверие"}{" "}
+                              <span className="font-mono tabular-nums normal-case">
+                                {e.caller_reputation.weight > 0 ? "+" : ""}
+                                {e.caller_reputation.weight}
+                              </span>
+                            </span>
+                            <span className="font-mono tabular-nums normal-case sm:hidden">
+                              {e.caller_reputation.list_type === "blocklist" ? "Блок" : "Дов"}{" "}
                               {e.caller_reputation.weight > 0 ? "+" : ""}
                               {e.caller_reputation.weight}
                             </span>

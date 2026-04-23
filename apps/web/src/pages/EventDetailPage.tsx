@@ -246,24 +246,33 @@ export default function EventDetailPage() {
           role="status"
         >
           <p className="font-semibold">
-            {data.caller_reputation.list_type === "blocklist"
-              ? "Номер в блок-листе репутации"
-              : "Номер в списке доверенных"}
+            {data.caller_reputation.list_type === "blocklist" ? (
+              <>
+                <span className="max-sm:hidden">Номер в блок-листе репутации</span>
+                <span className="sm:hidden">Блок-лист</span>
+              </>
+            ) : (
+              <>
+                <span className="max-sm:hidden">Номер в списке доверенных</span>
+                <span className="sm:hidden">Доверенные</span>
+              </>
+            )}
           </p>
           <p className="mt-1 text-sm text-brand-muted dark:text-brand-surface/80">
-            К сумме весов правил:{" "}
+            <span className="max-sm:hidden">К сумме весов правил: </span>
+            <span className="sm:hidden">Вес: </span>
             <span className="font-mono font-semibold text-brand-ink dark:text-brand-surface">
               {data.caller_reputation.weight > 0 ? "+" : ""}
               {data.caller_reputation.weight}
             </span>
             {data.caller_reputation.label ? (
-              <>
+              <span className="max-sm:hidden">
                 {" "}
                 · <span>{data.caller_reputation.label}</span>
-              </>
+              </span>
             ) : null}
             {data.caller_reputation.source ? (
-              <span className="ml-1 font-mono text-xs opacity-80">({data.caller_reputation.source})</span>
+              <span className="ml-1 hidden font-mono text-xs opacity-80 sm:inline">({data.caller_reputation.source})</span>
             ) : null}
           </p>
         </div>
@@ -278,7 +287,8 @@ export default function EventDetailPage() {
             <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-brand-red/60 motion-reduce:animate-none" />
             <span className="relative inline-flex h-2.5 w-2.5 rounded-full bg-brand-red" />
           </span>
-          Высокий риск — проверьте в первую очередь
+          <span className="max-sm:hidden">Высокий риск — проверьте в первую очередь</span>
+          <span className="sm:hidden">Высокий риск</span>
         </div>
       ) : null}
 

@@ -2,11 +2,11 @@ import type { RiskLevel } from "@/types";
 
 export type RiskFilter = "all" | RiskLevel;
 
-const options: { id: RiskFilter; label: string }[] = [
+const options: { id: RiskFilter; label: string; short?: string }[] = [
   { id: "all", label: "Все" },
-  { id: "low", label: "Низкий" },
-  { id: "medium", label: "Средний" },
-  { id: "high", label: "Высокий" },
+  { id: "low", label: "Низкий", short: "Н" },
+  { id: "medium", label: "Средний", short: "С" },
+  { id: "high", label: "Высокий", short: "В" },
 ];
 
 export function RiskFilterBar({
@@ -31,6 +31,8 @@ export function RiskFilterBar({
           <button
             key={o.id}
             type="button"
+            title={o.label}
+            aria-label={o.label}
             onClick={() => onChange(o.id)}
             className={[
               "min-h-[2.25rem] rounded-full border px-3 py-1.5 text-sm font-semibold transition sm:min-h-0 sm:px-3.5",
@@ -39,7 +41,14 @@ export function RiskFilterBar({
                 : "border-brand-line bg-brand-card text-brand-muted hover:border-brand-muted hover:text-brand-ink dark:border-brand-panel-border dark:bg-brand-panel dark:text-brand-surface/70 dark:hover:border-brand-muted dark:hover:text-brand-surface",
             ].join(" ")}
           >
-            {o.label}
+            {o.short ? (
+              <>
+                <span className="max-sm:hidden">{o.label}</span>
+                <span className="sm:hidden">{o.short}</span>
+              </>
+            ) : (
+              o.label
+            )}
           </button>
         );
       })}
