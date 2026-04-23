@@ -56,6 +56,9 @@ def upsert_reputation_row(
         db.add(row)
     db.commit()
     db.refresh(row)
+    from app.services.event_risk_resync import resync_fraud_events_risk_for_msisdn
+
+    resync_fraud_events_risk_for_msisdn(db, msisdn_normalized)
     return row
 
 
@@ -65,4 +68,7 @@ def delete_reputation_by_normalized(db: Session, msisdn_normalized: str) -> bool
         return False
     db.delete(row)
     db.commit()
+    from app.services.event_risk_resync import resync_fraud_events_risk_for_msisdn
+
+    resync_fraud_events_risk_for_msisdn(db, msisdn_normalized)
     return True

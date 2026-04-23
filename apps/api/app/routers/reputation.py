@@ -12,6 +12,7 @@ from app.limiter import ingest_or_ip_key, limiter
 from app.models import MsisdnReputation
 from app.schemas import ReputationDeleteIn, ReputationEntryOut, ReputationUpsertIn
 from app.services.reputation_guard import assert_reputation_mutation_allowed, log_reputation_mutation
+from app.services.event_risk_resync import resync_fraud_events_risk_for_msisdn
 from app.services.reputation_store import delete_reputation_by_normalized, reputation_row_to_entry_out, upsert_reputation_row
 from app.services.ru_msisdn import normalize_ru_mobile_msisdn_key
 
@@ -70,8 +71,10 @@ def delete_reputation_entry(request: Request, entry_id: uuid.UUID, db: Session =
     row = db.get(MsisdnReputation, entry_id)
     if not row:
         raise HTTPException(status_code=404, detail="reputation entry not found")
+    key = row.msisdn_normalized
     db.delete(row)
     db.commit()
+    resync_fraud_events_risk_for_msisdn(db, key)
     return {"removed": True}
 
 

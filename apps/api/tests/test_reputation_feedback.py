@@ -1,5 +1,10 @@
 """Репутация MSISDN и обратная связь по событиям."""
 
+import uuid
+
+from app.db import SessionLocal
+from app.models import FraudEvent
+
 
 def test_blocklist_adds_weight_and_caller_reputation(client):
     r0 = client.post(
@@ -110,6 +115,61 @@ def test_get_event_includes_prefill_tail_only_on_detail(client):
     row = next((x for x in listed if x["id"] == str(eid)), None)
     assert row is not None
     assert row.get("from_msisdn_prefill_tail") is None
+
+
+def test_blocklist_resync_moves_event_into_high_risk_filter(client):
+    """
+    Список /v1/events?risk_level=… фильтрует по колонке FraudEvent.risk_level.
+    После бана репутации live-скор растёт — без resync карточка «высокий», а фильтр нет.
+    """
+    ev = client.post(
+        "/v1/events",
+        json={
+            "event_type": "sms",
+            "from_msisdn": "+79008887766",
+            "to_msisdn": "+79007654321",
+            "text": "привет для теста фильтра",
+        },
+    )
+    assert ev.status_code == 200
+    data = ev.json()
+    eid = data["id"]
+    # Детерминированный medium у порога high: +18 блока → 58 (high).
+    db = SessionLocal()
+    try:
+        row = db.get(FraudEvent, uuid.UUID(eid))
+        assert row is not None
+        row.risk_score = 40
+        row.risk_level = "medium"
+        p = dict(row.payload) if isinstance(row.payload, dict) else {}
+        p.pop("caller_reputation", None)
+        row.payload = p
+        db.commit()
+    finally:
+        db.close()
+
+    listed = client.get("/v1/events?risk_level=medium").json()
+    assert any(x["id"] == eid for x in listed)
+
+    high_before = client.get("/v1/events?risk_level=high").json()
+    assert all(x["risk_level"] == "high" for x in high_before)
+    assert not any(x["id"] == eid for x in high_before)
+
+    rep = client.post(
+        "/v1/reputation",
+        json={
+            "msisdn": "+79008887766",
+            "list_type": "blocklist",
+            "label": "pytest ban",
+            "source": "pytest",
+        },
+    )
+    assert rep.status_code == 200
+
+    high_after = client.get("/v1/events?risk_level=high").json()
+    assert any(x["id"] == eid for x in high_after)
+    row = next(x for x in high_after if x["id"] == eid)
+    assert row["risk_level"] == "high"
 
 
 def test_reputation_from_event_card(client):

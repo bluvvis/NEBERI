@@ -12,4 +12,6 @@ python -m pytest -q
 
 В ответе `EventOut` поле **`score_explanation`** — разбор скора для UI/интеграций (точная смесь, число сработавших правил, пороги уровней).
 
+После **изменения справочника репутации** (`msisdn_reputation`: POST/DELETE, бан с карточки события, первый `missed_fraud` → блок) для затронутых `fraud_events` пересчитываются и **сохраняются** `risk_score` / `risk_level` и снимок `caller_reputation` в `payload`, чтобы лента с фильтром `?risk_level=` совпадала с карточкой.
+
 Перезаливка демо-событий в UTF-8 (из корня репо): `python scripts/reseed_demo_events.py --purge`.
