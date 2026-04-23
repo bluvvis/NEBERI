@@ -43,6 +43,7 @@ helm upgrade --install neberi .\deploy\helm\neberi -n team-11-ns --create-namesp
 | Нет StorageClass в namespace → PVC `Pending` | В **`values-public.yaml`**: `postgres.persistence.enabled: false` (emptyDir; для проды попросите StorageClass у админов). |
 | ResourceQuota требует limits у **каждого** контейнера | У init-контейнера `wait-for-pg` в **`deployment-api.yaml`** заданы `resources` (requests/limits). |
 | Образы `neberi/api` и `neberi/web` не существуют в Docker Hub | Workflow **`.github/workflows/build-push-images.yml`**: пуш в **`ghcr.io/<ваш-github-login>/neberi-api`** и **`neberi-web`** (после первого прогона сделайте пакеты **Public** в GitHub Packages, иначе кластеру понадобится `imagePullSecrets`). |
+| Обновили фронт, а по URL всё по-старому | Тег **`:latest`** + **`IfNotPresent`** — нода может не перекачать образ. В **`values-images-ghcr.yaml`** для api/web задано **`pullPolicy: Always`**; после пуша в `main` дождитесь Actions и снова **`Deploy-Team11.ps1`** (или `kubectl rollout restart`). |
 | Скрипт деплоя | **`deploy/scripts/Deploy-Team11.ps1`** — после публикации образов: `.\deploy\scripts\Deploy-Team11.ps1 -GhcrOwner "вашlogin"` (или `-ApiImage`/`-WebImage` вручную). |
 
 Релиз **neberi** в `team-11-ns` уже применён через Helm (ревизия с исправлениями); поды **api/web** останутся в `ImagePullBackOff`, пока в registry не появятся ваши образы — это ожидаемо с текущей среды без пуша.

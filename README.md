@@ -60,4 +60,6 @@ docker compose up --build
 .\deploy\scripts\Deploy-Team11.ps1
 ```
 
+Образы с GHCR по тегу `latest` подтягиваются с **`imagePullPolicy: Always`** (см. `values-images-ghcr.yaml`), иначе после CI на ноде часто остаётся старая сборка.
+
 Подробности и ingress: [`deploy/KUBERNETES.md`](deploy/KUBERNETES.md).

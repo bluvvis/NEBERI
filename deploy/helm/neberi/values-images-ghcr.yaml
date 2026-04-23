@@ -1,10 +1,14 @@
 # Образы после успешного GitHub Actions «Build and push images» для org/user bluvvis.
 # Пакеты в GHCR сделайте Public: https://github.com/bluvvis?tab=packages
+#
+# pullPolicy: Always — иначе при теге :latest кластер часто оставляет старый слой и правки на сайте не видны.
 api:
   image:
     repository: ghcr.io/bluvvis/neberi-api
     tag: latest
+    pullPolicy: Always
 web:
   image:
     repository: ghcr.io/bluvvis/neberi-web
     tag: latest
+    pullPolicy: Always
