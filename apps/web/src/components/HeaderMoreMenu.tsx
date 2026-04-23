@@ -3,6 +3,7 @@ import { useAuth } from "@/auth/AuthContext";
 import { UserAvatar } from "@/components/UserAvatar";
 import { OpenApiDocsLink } from "@/components/OpenApiDocsLink";
 import { resolveAuthAvatarUrl } from "@/lib/api";
+import { headerMoreMenuIconClass, headerMoreMenuRowClass } from "@/lib/headerMoreMenuStyles";
 import { useTheme } from "@/theme/ThemeProvider";
 
 function IconDoc({ className }: { className?: string }) {
@@ -29,8 +30,13 @@ function IconSun({ className }: { className?: string }) {
   );
 }
 
-const rowClass =
-  "flex w-full items-center gap-3 rounded-lg px-3 py-2.5 text-left text-base font-medium text-brand-ink transition-colors hover:bg-brand-surface/90 dark:text-brand-surface dark:hover:bg-brand-ink/80";
+/** Как у неактивных «Лента» / «Репутация»: серый текст, те же отступы на мобилке. */
+const moreTriggerClass = [
+  "flex cursor-default select-none items-center gap-1.5 rounded-xl border border-brand-line bg-brand-surface px-3 py-2 text-sm font-semibold outline-none transition-colors",
+  "text-brand-muted hover:bg-brand-line/60 hover:text-brand-ink dark:border-brand-panel-border dark:bg-brand-ink/50 dark:text-brand-surface/70 dark:hover:bg-brand-ink dark:hover:text-brand-surface",
+  "max-sm:px-2.5 max-sm:py-1.5",
+  "focus-visible:ring-2 focus-visible:ring-brand-red/40 focus-visible:ring-offset-2 focus-visible:ring-offset-brand-card dark:focus-visible:ring-offset-brand-ink",
+].join(" ");
 
 export function HeaderMoreMenu() {
   const { theme, toggleTheme } = useTheme();
@@ -38,62 +44,43 @@ export function HeaderMoreMenu() {
   const isDark = theme === "dark";
 
   return (
-    <div
-      className="group/more relative outline-none"
-      tabIndex={0}
-      onKeyDown={(e) => {
-        if (e.key === "Escape") (e.target as HTMLElement).blur();
-      }}
-    >
-      <div
-        className={[
-          "flex min-h-[2.75rem] cursor-default select-none items-center gap-1.5 rounded-xl border border-brand-line bg-brand-surface px-3 py-2 text-sm font-semibold text-brand-ink transition-colors sm:min-h-0 sm:py-2",
-          "dark:border-brand-panel-border dark:bg-brand-ink/50 dark:text-brand-surface",
-          "group-hover/more:rounded-b-none group-hover/more:border-b-transparent dark:group-hover/more:border-b-transparent",
-          "group-focus-visible/more:rounded-b-none group-focus-visible/more:border-b-transparent",
-        ].join(" ")}
-      >
+    <div className="group/more relative overflow-visible outline-none">
+      <div className={moreTriggerClass}>
         <span>Ещё</span>
         <svg
-          className="h-4 w-4 shrink-0 text-brand-muted transition-transform duration-200 group-hover/more:-rotate-180 group-focus-visible/more:-rotate-180 motion-reduce:transition-none dark:text-brand-surface/60"
+          className="h-4 w-4 shrink-0 text-brand-muted transition-transform duration-200 group-hover/more:-rotate-180 motion-reduce:transition-none dark:text-brand-surface/60"
           viewBox="0 0 20 20"
           fill="currentColor"
           aria-hidden
         >
-          <path d="M5.23 7.21a.75.75 0 0 1 1.06.02L10 11.168l3.71-3.94a.75.75 0 1 1 1.08 1.04l-4.25 4.5a.75.75 0 0 1-1.08 0l-4.25-4.5a.75.75 0 0 1 .02-1.06Z" />
+          <path d="M5.23 7.21a.75.75 0 0 1 1.06.02L10 11.168l3.71-3.94a.75.75 0 0 1 1.08 1.04l-4.25 4.5a.75.75 0 0 1-1.08 0l-4.25-4.5a.75.75 0 0 1 .02-1.06Z" />
         </svg>
       </div>
 
-      <div
-        className={[
-          "invisible absolute right-0 top-full z-[100] min-w-[14rem] pt-1 opacity-0 transition-opacity duration-150",
-          "group-hover/more:visible group-hover/more:opacity-100",
-          "group-focus-within/more:visible group-focus-within/more:opacity-100",
-        ].join(" ")}
-      >
-        <div className="min-w-[min(100vw-1.5rem,18rem)] rounded-b-xl rounded-tl-xl border border-brand-line bg-brand-card py-1 shadow-xl dark:border-brand-panel-border dark:bg-brand-panel dark:shadow-black/45 sm:min-w-[14rem]">
-          <Link to="/about" className={rowClass}>
-            <IconDoc className="h-5 w-5 shrink-0 text-brand-red opacity-90" />
+      <div className="invisible absolute right-0 top-full z-[100] -mt-1 pt-2 opacity-0 transition-opacity duration-150 group-hover/more:visible group-hover/more:opacity-100">
+        <div className="min-w-[min(100vw-1.5rem,18rem)] overflow-visible rounded-xl border border-brand-line bg-brand-card px-1 py-1.5 shadow-xl dark:border-brand-panel-border dark:bg-brand-panel dark:shadow-black/45 sm:min-w-[14rem]">
+          <Link to="/about" className={headerMoreMenuRowClass}>
+            <IconDoc className={headerMoreMenuIconClass} />
             О продукте
           </Link>
           <OpenApiDocsLink variant="menuRow" />
           {user ? (
-            <Link to="/profile" className={rowClass}>
+            <Link to="/profile" className={headerMoreMenuRowClass}>
               <UserAvatar src={resolveAuthAvatarUrl(user.avatar_url, avatarCacheBust)} alt="" size="sm" />
               <span className="min-w-0 truncate">{user.nickname}</span>
             </Link>
           ) : (
-            <Link to="/login" className={rowClass}>
+            <Link to="/login" className={headerMoreMenuRowClass}>
               <UserAvatar src={undefined} alt="" size="sm" />
               <span>Войти</span>
             </Link>
           )}
-          <button type="button" onClick={() => toggleTheme()} className={`${rowClass} w-full border-t border-brand-line dark:border-brand-panel-border`}>
-            {isDark ? (
-              <IconSun className="h-5 w-5 shrink-0 text-amber-500/90" />
-            ) : (
-              <IconMoon className="h-5 w-5 shrink-0 text-brand-muted dark:text-brand-surface/70" />
-            )}
+          <button
+            type="button"
+            onClick={() => toggleTheme()}
+            className={`${headerMoreMenuRowClass} border-t border-brand-line dark:border-brand-panel-border`}
+          >
+            {isDark ? <IconSun className={headerMoreMenuIconClass} /> : <IconMoon className={headerMoreMenuIconClass} />}
             {isDark ? "Светлая тема" : "Тёмная тема"}
           </button>
         </div>

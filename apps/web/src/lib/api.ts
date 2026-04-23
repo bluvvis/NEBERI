@@ -234,6 +234,24 @@ export function resolveAuthAvatarUrl(avatarUrl: string | null | undefined, cache
   return `${base}${sep}_=${cacheBust}`;
 }
 
+/** Ответ не JSON (часто HTML от nginx при 413) — показываем короткий текст вместо разметки. */
+function humanizeAvatarUploadFailure(status: number, raw: string): string {
+  const t = raw.trim();
+  if (status === 413) {
+    return "Файл слишком большой. Выберите изображение до 1,5 МБ (PNG или JPEG).";
+  }
+  if (/^<!DOCTYPE html>/i.test(t) || /^<html/i.test(t) || t.includes("<body")) {
+    if (status === 413 || status === 400 || status === 502 || status === 503) {
+      return "Файл не принят. Часто это слишком большой размер — попробуйте до 1,5 МБ или другое фото (PNG/JPEG).";
+    }
+    return "Сервер вернул ошибку. Попробуйте другой файл или позже.";
+  }
+  if (t.length > 400) {
+    return "Не удалось загрузить фото. Попробуйте файл меньшего размера (до 1,5 МБ).";
+  }
+  return t || "Не удалось загрузить фото.";
+}
+
 async function readApiErrorMessage(r: Response): Promise<string> {
   const raw = ((await r.text()) || "").trim() || String(r.status);
   try {
@@ -316,8 +334,28 @@ export async function authUploadAvatar(token: string, file: File): Promise<AuthU
     headers: { ...authHeaders(token) },
     body: fd,
   });
-  if (!r.ok) throw new Error(await readApiErrorMessage(r));
-  return r.json() as Promise<AuthUserPublic>;
+  const raw = await r.text();
+  if (!r.ok) {
+    let detail = raw.trim() || String(r.status);
+    try {
+      const j = JSON.parse(raw) as { detail?: unknown };
+      const d = j.detail;
+      if (typeof d === "string") detail = d;
+      else if (Array.isArray(d)) {
+        detail = d
+          .map((item) => {
+            if (typeof item === "string") return item;
+            if (item && typeof item === "object" && "msg" in item) return String((item as { msg: string }).msg);
+            return JSON.stringify(item);
+          })
+          .join("; ");
+      }
+    } catch {
+      /* оставляем raw */
+    }
+    throw new Error(humanizeAvatarUploadFailure(r.status, detail));
+  }
+  return JSON.parse(raw) as Promise<AuthUserPublic>;
 }
 
 export async function authDeleteAvatar(token: string): Promise<AuthUserPublic> {

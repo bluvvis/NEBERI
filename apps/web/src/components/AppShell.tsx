@@ -11,7 +11,7 @@ const navClass = ({ isActive }: { isActive: boolean }) =>
     "max-sm:px-2.5 max-sm:py-1.5",
     "focus-visible:ring-2 focus-visible:ring-brand-red/40 focus-visible:ring-offset-2 focus-visible:ring-offset-brand-card dark:focus-visible:ring-offset-brand-ink",
     isActive
-      ? "text-brand-red ring-1 ring-brand-red/35 dark:bg-brand-red/15 dark:text-brand-surface dark:ring-brand-red/40"
+      ? "border-brand-red/45 text-brand-red dark:border-brand-red/50 dark:bg-brand-red/15 dark:text-brand-surface"
       : "text-brand-muted hover:bg-brand-line/60 hover:text-brand-ink dark:text-brand-surface/70 dark:hover:bg-brand-ink dark:hover:text-brand-surface",
   ].join(" ");
 
@@ -58,14 +58,14 @@ export function AppShell() {
               />
             </div>
             <div className="min-w-0">
-              <p className="truncate text-xs font-medium text-brand-muted sm:text-base dark:text-brand-surface/70">
+              <p className="truncate text-xs font-medium text-brand-muted sm:text-base dark:text-brand-surface/60">
                 <span className="max-sm:hidden">Сигналы о мошенничестве</span>
                 <span className="sm:hidden">NeBeri</span>
               </p>
             </div>
           </Link>
-          <div className="flex min-w-0 flex-1 items-center gap-2 sm:flex-initial sm:justify-end">
-            <nav className="flex min-w-0 flex-1 items-center gap-2 sm:flex-none" aria-label="Основная навигация">
+          <div className="flex min-w-0 flex-1 items-center gap-2 overflow-visible sm:flex-initial sm:justify-end">
+            <nav className="flex min-w-0 flex-1 items-center gap-2 overflow-visible sm:flex-none" aria-label="Основная навигация">
               <NavLink to="/" end className={navClass}>
                 Лента
               </NavLink>
@@ -73,7 +73,7 @@ export function AppShell() {
                 Репутация
               </NavLink>
             </nav>
-            <div className="relative z-50 shrink-0">
+            <div className="relative z-50 shrink-0 overflow-visible">
               <HeaderMoreMenu />
             </div>
           </div>

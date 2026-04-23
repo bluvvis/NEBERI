@@ -61,7 +61,9 @@ export function UserAvatar({ src, alt, size = "md" }: Props) {
           role="img"
           aria-label={alt || "Аватар не задан"}
         >
-          <PlaceholderPerson className={size === "lg" ? "h-14 w-14 text-neutral-400" : "h-[55%] w-[55%] text-neutral-400"} />
+          <PlaceholderPerson
+            className={size === "lg" ? "h-[4.5rem] w-[4.5rem] text-neutral-400" : "h-[78%] w-[78%] text-neutral-400"}
+          />
         </div>
       )}
     </div>

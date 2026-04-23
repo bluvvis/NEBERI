@@ -1,3 +1,5 @@
+import { headerMoreMenuIconClass, headerMoreMenuRowClass } from "@/lib/headerMoreMenuStyles";
+
 type Variant = "menuRow" | "pagePill";
 
 const pagePill =
@@ -23,10 +25,6 @@ function IconArrowOut({ className }: { className?: string }) {
   );
 }
 
-/** Выпадающее меню: одна строка, как остальные пункты «Ещё». */
-const menuRowPlain =
-  "flex w-full items-center gap-3 rounded-lg px-3 py-2.5 text-left text-base font-medium text-brand-ink transition-colors hover:bg-brand-surface/90 dark:text-brand-surface dark:hover:bg-brand-ink/80";
-
 function IconCode({ className }: { className?: string }) {
   return (
     <svg className={className} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.5} aria-hidden>
@@ -38,8 +36,8 @@ function IconCode({ className }: { className?: string }) {
 export function OpenApiDocsLink({ variant }: { variant: Variant }) {
   if (variant === "menuRow") {
     return (
-      <a href="/docs" target="_blank" rel="noopener noreferrer" className={menuRowPlain}>
-        <IconCode className="h-5 w-5 shrink-0 text-brand-muted dark:text-brand-surface/70" />
+      <a href="/docs" target="_blank" rel="noopener noreferrer" className={headerMoreMenuRowClass}>
+        <IconCode className={headerMoreMenuIconClass} />
         OpenAPI
       </a>
     );

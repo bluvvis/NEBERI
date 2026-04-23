@@ -15,6 +15,8 @@ const inputClass =
 
 const SPECIALIST_RATING_VALUE = 72;
 
+const AVATAR_MAX_BYTES = Math.floor(1.5 * 1024 * 1024);
+
 const RATING_TOOLTIP =
   "40% — согласованность ваших отметок по репутации с решением более опытного коллеги при аудите; 30% — точность на выборке разборов; 20% — стабильность решений за 90 дней; 10% — обоснованные жалобы на ошибки (чем меньше, тем лучше). Чем выше рейтинг, тем больший вес получают ваши репорты при расчёте риска и в очереди разборов.";
 
@@ -62,6 +64,14 @@ export default function ProfilePage() {
     const f = e.target.files?.[0];
     e.target.value = "";
     if (!f || !user) return;
+    if (f.size > AVATAR_MAX_BYTES) {
+      setToast({
+        text: "Файл больше 1,5 МБ. Сожмите изображение или выберите другое (PNG или JPEG).",
+        tone: "err",
+      });
+      window.setTimeout(() => setToast(null), 5000);
+      return;
+    }
     setAvatarBusy(true);
     setToast(null);
     try {
@@ -159,7 +169,7 @@ export default function ProfilePage() {
         </div>
       ) : null}
 
-      <section className={`${shell} overflow-hidden`}>
+      <section className={shell}>
         <div className="border-b border-brand-line bg-gradient-to-br from-brand-surface/80 to-transparent px-6 py-8 dark:border-brand-panel-border dark:from-brand-ink/40">
           <div className="flex flex-col items-center gap-6 sm:flex-row sm:items-start">
             <UserAvatar src={avatarSrc} alt={user.nickname} size="lg" />
@@ -200,20 +210,26 @@ export default function ProfilePage() {
                 <p className="mt-1 text-xs text-brand-muted dark:text-brand-surface/60">
                   Наведите курсор на значение — как считается рейтинг и как он влияет на вес ваших репортов.
                 </p>
-                <div className="group relative mt-3 inline-flex w-max max-w-full">
+                <div className="group relative mt-3 max-w-full">
+                  <p id="profile-rating-expl" className="sr-only">
+                    {RATING_TOOLTIP}
+                  </p>
                   <button
                     type="button"
-                    title="Согласованность с ревью, точность аудита, стабильность решений, жалобы на ошибки. Полный текст — во всплывающей подсказке при наведении."
-                    className="flex items-baseline gap-1.5 rounded-xl border border-brand-line bg-brand-surface px-4 py-3 text-left transition hover:border-brand-muted focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-red/35 dark:border-brand-panel-border dark:bg-brand-ink"
+                    title="Согласованность с ревью, точность аудита, стабильность решений, жалобы на ошибки."
+                    className="inline-flex w-full max-w-md items-baseline gap-1.5 rounded-xl border border-brand-line bg-brand-surface px-4 py-2.5 text-left transition hover:border-brand-muted focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-red/35 dark:border-brand-panel-border dark:bg-brand-ink sm:inline-flex sm:w-auto sm:max-w-none"
                     aria-describedby="profile-rating-expl"
                   >
-                    <span className="text-3xl font-bold tabular-nums text-brand-ink dark:text-brand-surface">{SPECIALIST_RATING_VALUE}</span>
+                    <span className="text-2xl font-bold tabular-nums text-brand-ink dark:text-brand-surface sm:text-3xl">{SPECIALIST_RATING_VALUE}</span>
                     <span className="text-sm font-medium text-brand-muted dark:text-brand-surface/65">/ 100</span>
                   </button>
+                  <p className="mt-2 text-xs leading-relaxed text-brand-ink dark:text-brand-surface sm:hidden" aria-hidden="true">
+                    {RATING_TOOLTIP}
+                  </p>
                   <div
-                    id="profile-rating-expl"
                     role="tooltip"
-                    className="pointer-events-none invisible absolute left-0 top-full z-30 mt-2 w-[min(100vw-2.5rem,24rem)] rounded-xl border border-brand-line bg-brand-card p-3 text-left text-xs leading-relaxed text-brand-ink opacity-0 shadow-xl transition-opacity duration-150 group-hover:visible group-hover:opacity-100 group-focus-within:visible group-focus-within:opacity-100 dark:border-brand-panel-border dark:bg-brand-panel dark:text-brand-surface"
+                    aria-hidden="true"
+                    className="pointer-events-none invisible absolute left-0 top-full z-30 mt-2 hidden w-[min(100vw-2.5rem,24rem)] rounded-xl border border-brand-line bg-brand-card p-3 text-left text-xs leading-relaxed text-brand-ink opacity-0 shadow-xl transition-opacity duration-150 group-hover:visible group-hover:opacity-100 group-focus-within:visible group-focus-within:opacity-100 dark:border-brand-panel-border dark:bg-brand-panel dark:text-brand-surface sm:block"
                   >
                     {RATING_TOOLTIP}
                   </div>
@@ -226,7 +242,7 @@ export default function ProfilePage() {
                 </p>
                 <Link
                   to="/profile/reviews"
-                  className="mt-3 inline-flex rounded-xl border border-brand-line bg-brand-surface px-4 py-2.5 text-sm font-semibold text-brand-ink transition hover:border-brand-muted dark:border-brand-panel-border dark:bg-brand-ink dark:text-brand-surface"
+                  className="mt-3 inline-flex w-full max-w-md justify-center rounded-xl border border-brand-line bg-brand-surface px-4 py-2.5 text-sm font-semibold text-brand-ink transition hover:border-brand-muted dark:border-brand-panel-border dark:bg-brand-ink dark:text-brand-surface sm:inline-flex sm:w-auto sm:max-w-none"
                 >
                   Перейти к оценке моих решений
                 </Link>

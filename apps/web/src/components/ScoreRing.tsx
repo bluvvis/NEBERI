@@ -36,7 +36,7 @@ export function ScoreRing({ riskScore, riskLevel, size = "md" }: Props) {
 
   return (
     <div
-      className={`relative isolate shrink-0 overflow-hidden rounded-full ring-1 ring-brand-line motion-reduce:animate-none animate-score-pop dark:ring-brand-panel-border ${s.box} ${high ? "ring-2 ring-brand-red shadow-brand-ring-glow motion-reduce:shadow-none animate-risk-high-ring motion-reduce:animate-none" : ""}`}
+      className={`relative isolate shrink-0 overflow-hidden rounded-full motion-reduce:animate-none animate-score-pop ${s.box} ${high ? "shadow-brand-ring-glow motion-reduce:shadow-none animate-risk-high-ring motion-reduce:animate-none" : ""}`}
     >
       <div
         className="absolute inset-0 rounded-full"
