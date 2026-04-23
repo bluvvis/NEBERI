@@ -4,6 +4,9 @@
   Перед запуском: образы neberi/api и neberi/web должны быть доступны кластеру
   (docker push в registry курса / ttl.sh при стабильной сети / импорт на ноде microk8s).
 
+  По умолчанию тег образа = sha- + 7 символов последнего коммита main (как пушит Actions). Сначала дождитесь зелёного «Build and push images».
+  Явно :latest:  .\deploy\scripts\Deploy-Team11.ps1 -ImageTag latest
+
   Пример с ttl.sh (после успешного docker push):
     .\deploy\scripts\Deploy-Team11.ps1 `
       -ApiImage "ttl.sh/your-uuid-api:4h" `
@@ -19,11 +22,28 @@ param(
   [string]$ValuesGhcr = (Join-Path $PSScriptRoot "..\helm\neberi\values-images-ghcr.yaml" | Resolve-Path).Path,
   [string]$ApiImage = "",
   [string]$WebImage = "",
-  [string]$GhcrOwner = "bluvvis"
+  [string]$GhcrOwner = "bluvvis",
+  [string]$GithubRepo = "bluvvis/NEBERI",
+  [string]$ImageTag = ""
 )
 
 $ErrorActionPreference = "Stop"
 $env:KUBECONFIG = $Kubeconfig
+
+function Resolve-DefaultImageTag {
+  param([string]$Repo)
+  try {
+    $uri = "https://api.github.com/repos/$Repo/commits/main"
+    $r = Invoke-RestMethod -Uri $uri -Headers @{ "User-Agent" = "NeBeri-Deploy" } -TimeoutSec 20
+    if (-not $r.sha) { throw "no sha in response" }
+    $short = $r.sha.Substring(0, 7)
+    return "sha-$short"
+  }
+  catch {
+    Write-Host "WARN: не удалось получить SHA main с api.github.com — $($_.Exception.Message). Используем тег latest."
+    return "latest"
+  }
+}
 
 Write-Host "KUBECONFIG=$Kubeconfig"
 kubectl config current-context
@@ -34,8 +54,13 @@ if ($LASTEXITCODE -ne 0) {
 
 $owner = $GhcrOwner.Trim().ToLowerInvariant()
 if ($owner -ne "") {
-  if ($ApiImage -eq "") { $ApiImage = "ghcr.io/${owner}/neberi-api:latest" }
-  if ($WebImage -eq "") { $WebImage = "ghcr.io/${owner}/neberi-web:latest" }
+  $tagUse = $ImageTag.Trim()
+  if ($tagUse -eq "") {
+    $tagUse = Resolve-DefaultImageTag -Repo $GithubRepo.Trim()
+  }
+  Write-Host "Образы ghcr.io/${owner}/* :$tagUse (убедитесь, что Actions «Build and push images» для этого коммита уже зелёный)"
+  if ($ApiImage -eq "") { $ApiImage = "ghcr.io/${owner}/neberi-api:$tagUse" }
+  if ($WebImage -eq "") { $WebImage = "ghcr.io/${owner}/neberi-web:$tagUse" }
 }
 
 $extra = @()

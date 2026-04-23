@@ -39,6 +39,7 @@ jobs:
             ghcr.io/${{ github.repository_owner }}/neberi-api
           tags: |
             type=raw,value=latest
+            type=sha,prefix=sha-,format=short
 
       - name: Build and push API
         uses: docker/build-push-action@v6
@@ -58,6 +59,7 @@ jobs:
             ghcr.io/${{ github.repository_owner }}/neberi-web
           tags: |
             type=raw,value=latest
+            type=sha,prefix=sha-,format=short
 
       - name: Build and push Web
         uses: docker/build-push-action@v6
