@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import { Link, Navigate, useLocation } from "react-router-dom";
 import { useAuth } from "@/auth/AuthContext";
+import { ScoreRing } from "@/components/ScoreRing";
 import { UserAvatar } from "@/components/UserAvatar";
 import { ShowPasswordToggle } from "@/components/ShowPasswordToggle";
 import { resolveAuthAvatarUrl } from "@/lib/api";
@@ -8,7 +9,7 @@ import { nicknameValidationMessage, sanitizeNicknameInput } from "@/lib/authInpu
 import { clearNeberiSessionUiState } from "@/lib/sessionKeys";
 
 const shell =
-  "rounded-2xl border border-brand-line bg-brand-card shadow-panel-light dark:border-brand-panel-border dark:bg-brand-panel dark:shadow-panel";
+  "overflow-hidden rounded-2xl border border-brand-line bg-brand-card shadow-panel-light dark:border-brand-panel-border dark:bg-brand-panel dark:shadow-panel";
 
 const inputClass =
   "mt-1 w-full max-w-xs rounded-xl border border-brand-line bg-brand-surface px-3 py-2 text-sm text-brand-ink outline-none transition focus:border-brand-red/50 focus:ring-2 focus:ring-brand-red/25 dark:border-brand-panel-border dark:bg-brand-ink dark:text-brand-surface";
@@ -19,6 +20,9 @@ const AVATAR_MAX_BYTES = Math.floor(1.5 * 1024 * 1024);
 
 const RATING_TOOLTIP =
   "40% — согласованность ваших отметок по репутации с решением более опытного коллеги при аудите; 30% — точность на выборке разборов; 20% — стабильность решений за 90 дней; 10% — обоснованные жалобы на ошибки (чем меньше, тем лучше). Чем выше рейтинг, тем больший вес получают ваши репорты при расчёте риска и в очереди разборов.";
+
+const RATING_MOBILE_SHORT =
+  "40% — согласованность с аудитом; 30% — точность разборов; 20% — стабильность; 10% — жалобы. Подробнее — на экране от ПК при наведении на кольцо.";
 
 export default function ProfilePage() {
   const location = useLocation();
@@ -208,28 +212,22 @@ export default function ProfilePage() {
               <div className="min-w-0 flex-1">
                 <p className="text-sm font-semibold text-brand-ink dark:text-brand-surface">Рейтинг специалиста</p>
                 <p className="mt-1 text-xs text-brand-muted dark:text-brand-surface/60">
-                  Наведите курсор на значение — как считается рейтинг и как он влияет на вес ваших репортов.
+                  На ПК наведите курсор на кольцо — полная подсказка. На телефоне — краткая расшифровка ниже.
                 </p>
-                <div className="group relative mt-3 max-w-full">
+                <div className="group/rat relative mt-3 max-w-full">
                   <p id="profile-rating-expl" className="sr-only">
                     {RATING_TOOLTIP}
                   </p>
-                  <button
-                    type="button"
-                    title="Согласованность с ревью, точность аудита, стабильность решений, жалобы на ошибки."
-                    className="inline-flex w-full max-w-md items-baseline gap-1.5 rounded-xl border border-brand-line bg-brand-surface px-4 py-2.5 text-left transition hover:border-brand-muted focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-red/35 dark:border-brand-panel-border dark:bg-brand-ink sm:inline-flex sm:w-auto sm:max-w-none"
-                    aria-describedby="profile-rating-expl"
-                  >
-                    <span className="text-2xl font-bold tabular-nums text-brand-ink dark:text-brand-surface sm:text-3xl">{SPECIALIST_RATING_VALUE}</span>
-                    <span className="text-sm font-medium text-brand-muted dark:text-brand-surface/65">/ 100</span>
-                  </button>
-                  <p className="mt-2 text-xs leading-relaxed text-brand-ink dark:text-brand-surface sm:hidden" aria-hidden="true">
-                    {RATING_TOOLTIP}
-                  </p>
+                  <div className="flex max-w-md flex-col items-start gap-2 sm:max-w-none" aria-describedby="profile-rating-expl">
+                    <div className="shrink-0">
+                      <ScoreRing riskScore={SPECIALIST_RATING_VALUE} size="lg" introAnimate={false} />
+                    </div>
+                    <p className="text-xs leading-relaxed text-brand-muted dark:text-brand-surface/65 sm:hidden">{RATING_MOBILE_SHORT}</p>
+                  </div>
                   <div
                     role="tooltip"
                     aria-hidden="true"
-                    className="pointer-events-none invisible absolute left-0 top-full z-30 mt-2 hidden w-[min(100vw-2.5rem,24rem)] rounded-xl border border-brand-line bg-brand-card p-3 text-left text-xs leading-relaxed text-brand-ink opacity-0 shadow-xl transition-opacity duration-150 group-hover:visible group-hover:opacity-100 group-focus-within:visible group-focus-within:opacity-100 dark:border-brand-panel-border dark:bg-brand-panel dark:text-brand-surface sm:block"
+                    className="pointer-events-none invisible absolute left-0 top-full z-30 mt-2 hidden w-[min(100vw-2.5rem,24rem)] rounded-xl border border-brand-line bg-brand-card p-3 text-left text-xs leading-relaxed text-brand-ink opacity-0 shadow-xl transition-opacity duration-150 group-hover/rat:visible group-hover/rat:opacity-100 dark:border-brand-panel-border dark:bg-brand-panel dark:text-brand-surface max-sm:hidden sm:block"
                   >
                     {RATING_TOOLTIP}
                   </div>

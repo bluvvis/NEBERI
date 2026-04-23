@@ -402,7 +402,7 @@ export default function EventsPage() {
                   key={e.id}
                   style={{ animationDelay: `${Math.min(i, 14) * 42}ms` }}
                   className={[
-                    "relative w-full min-w-0 motion-reduce:animate-none animate-list-row",
+                    "relative w-full min-w-0 overflow-visible py-px motion-reduce:animate-none animate-list-row",
                     lastVisitedRowClass(e.id, lastVisitedId, e.risk_level),
                   ].join(" ")}
                 >
@@ -417,8 +417,8 @@ export default function EventsPage() {
                     to={eventListQuerySuffix ? `/events/${e.id}?${eventListQuerySuffix}` : `/events/${e.id}`}
                     onClick={() => persistEventsListScrollY()}
                     className={[
-                      "group relative z-[1] grid w-full max-w-full min-w-0 grid-cols-1 gap-2.5 px-3 py-3.5 transition-[background-color,box-shadow,transform] ease-out sm:h-[7.125rem] sm:max-h-[7.125rem] sm:grid-cols-[3.75rem_minmax(0,1fr)_10.5rem] sm:items-stretch sm:gap-x-3 sm:gap-y-0 sm:overflow-x-auto sm:overflow-y-clip sm:px-4 sm:py-2.5 sm:pr-3",
-                      "duration-200 hover:z-[2] hover:-translate-y-0.5 hover:bg-brand-surface hover:shadow-md motion-reduce:hover:translate-y-0 dark:hover:bg-brand-ink/35",
+                      "group relative z-[1] grid w-full max-w-full min-w-0 origin-center grid-cols-1 gap-2.5 px-3 py-3.5 transition-[background-color,box-shadow,transform] ease-out sm:h-[7.125rem] sm:max-h-[7.125rem] sm:grid-cols-[3.75rem_minmax(0,1fr)_10.5rem] sm:items-stretch sm:gap-x-3 sm:gap-y-0 sm:overflow-x-auto sm:overflow-visible sm:px-4 sm:py-2.5 sm:pr-3",
+                      "duration-200 hover:z-[2] hover:scale-[1.018] hover:bg-brand-surface hover:shadow-md motion-reduce:hover:scale-100 dark:hover:bg-brand-ink/35",
                       listRowRiskShellClass(e.risk_level),
                       visitedCallLowMediumDimClass(e.event_type, e.risk_level, e.id, visitTimesMap),
                     ].join(" ")}

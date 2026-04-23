@@ -18,10 +18,10 @@ describe("listRowRiskBarClass", () => {
     expect(listRowRiskBarClass("high", "e1", visits)).toMatch(/bg-brand-red\/72/);
   });
 
-  it("low/medium: bar only when visited", () => {
+  it("low/medium: bar only when visited; medium uses same tint as low", () => {
     expect(listRowRiskBarClass("low")).toBe("bg-transparent");
     expect(listRowRiskBarClass("low", "x", visits)).toMatch(/zone-low/);
-    expect(listRowRiskBarClass("medium", "x", visits)).toMatch(/zone-mid/);
+    expect(listRowRiskBarClass("medium", "x", visits)).toMatch(/zone-low/);
     expect(listRowRiskBarClass("low", "x", {})).toBe("bg-transparent");
   });
 });

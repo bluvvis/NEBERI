@@ -15,8 +15,9 @@ export function listRowRiskBarClass(
     return visited ? "bg-brand-red/72 dark:bg-brand-red/68" : "bg-brand-red";
   }
   if (!visited) return "bg-transparent";
-  if (level === "medium") return "bg-brand-zone-mid/85 dark:bg-brand-zone-mid/75";
-  return "bg-brand-zone-low/90 dark:bg-brand-zone-low/70";
+  /** После просмотра low/medium — одинаковый светло-серый акцент. */
+  if (level === "low" || level === "medium") return "bg-brand-zone-low/90 dark:bg-brand-zone-low/70";
+  return "bg-transparent";
 }
 
 /** Лёгкий фон строки по уровню риска (полоска рисуется отдельно на `<li>`). */

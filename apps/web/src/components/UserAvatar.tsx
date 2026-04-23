@@ -4,10 +4,11 @@ type Props = {
   /** Если нет — показываем нейтральную заглушку (серый силуэт на белом). */
   src?: string | null;
   alt: string;
-  size?: "sm" | "md" | "lg";
+  size?: "xs" | "sm" | "md" | "lg";
 };
 
 const sizeClass: Record<NonNullable<Props["size"]>, string> = {
+  xs: "h-5 w-5 min-h-5 min-w-5 self-center border border-brand-line dark:border-brand-panel-border",
   sm: "h-9 w-9 min-h-9 min-w-9",
   md: "h-12 w-12 min-h-12 min-w-12",
   lg: "h-24 w-24 min-h-24 min-w-24",
@@ -39,7 +40,8 @@ export function UserAvatar({ src, alt, size = "md" }: Props) {
   return (
     <div
       className={[
-        "shrink-0 overflow-hidden rounded-full border-2 border-brand-line shadow-inner dark:border-brand-panel-border",
+        "shrink-0 overflow-hidden rounded-full shadow-inner",
+        size === "xs" ? "" : "border-2 border-brand-line dark:border-brand-panel-border",
         sizeClass[size],
       ].join(" ")}
     >
@@ -62,7 +64,13 @@ export function UserAvatar({ src, alt, size = "md" }: Props) {
           aria-label={alt || "Аватар не задан"}
         >
           <PlaceholderPerson
-            className={size === "lg" ? "h-[4.5rem] w-[4.5rem] text-neutral-400" : "h-[78%] w-[78%] text-neutral-400"}
+            className={
+              size === "lg"
+                ? "h-[4.5rem] w-[4.5rem] text-neutral-400"
+                : size === "xs"
+                  ? "h-[70%] w-[70%] text-neutral-400"
+                  : "h-[78%] w-[78%] text-neutral-400"
+            }
           />
         </div>
       )}

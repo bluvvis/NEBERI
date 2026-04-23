@@ -7,6 +7,8 @@ type Props = {
   riskLevel?: RiskLevel;
   /** По умолчанию компактное кольцо для строки ленты. */
   size?: "md" | "lg";
+  /** Включить короткую анимацию появления (в профиле обычно выключают). */
+  introAnimate?: boolean;
 };
 
 function toDisplayScore(riskScore: number): number {
@@ -27,7 +29,7 @@ const SIZE_STYLES = {
   },
 } as const;
 
-export function ScoreRing({ riskScore, riskLevel, size = "md" }: Props) {
+export function ScoreRing({ riskScore, riskLevel, size = "md", introAnimate = true }: Props) {
   const score = toDisplayScore(riskScore);
   const fill = scoreArcColor(score, riskLevel);
   const track = BRAND.line;
@@ -36,7 +38,14 @@ export function ScoreRing({ riskScore, riskLevel, size = "md" }: Props) {
 
   return (
     <div
-      className={`relative isolate shrink-0 overflow-hidden rounded-full motion-reduce:animate-none animate-score-pop ${s.box} ${high ? "shadow-brand-ring-glow motion-reduce:shadow-none animate-risk-high-ring motion-reduce:animate-none" : ""}`}
+      className={[
+        "relative isolate shrink-0 overflow-hidden rounded-full motion-reduce:animate-none",
+        introAnimate ? "animate-score-pop" : "",
+        s.box,
+        high ? "shadow-brand-ring-glow motion-reduce:shadow-none animate-risk-high-ring motion-reduce:animate-none" : "",
+      ]
+        .filter(Boolean)
+        .join(" ")}
     >
       <div
         className="absolute inset-0 rounded-full"
