@@ -19,6 +19,8 @@ spec:
       labels:
         app.kubernetes.io/name: {{ include "neberi.name" . }}
         app.kubernetes.io/component: api
+      annotations:
+        neberi.io/helm-revision: {{ .Release.Revision | quote }}
     spec:
       initContainers:
         - name: wait-for-pg
